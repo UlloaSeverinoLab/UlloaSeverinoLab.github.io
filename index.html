@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ulloa-Severino Lab | Neuroscience Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #132040;
+    --teal: #1d9e75;
+    --teal-light: #e1f5ee;
+    --teal-mid: #0f6e56;
+    --warm: #f7f4ef;
+    --text: #1a1a2e;
+    --text-muted: #5a6070;
+    --border: rgba(10,22,40,0.1);
+    --white: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; font-weight: 300; color: var(--text); background: var(--white); line-height: 1.7; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,22,40,0.97); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 4rem; height: 64px;
+  }
+  .nav-logo { font-family: 'DM Serif Display', serif; color: #fff; font-size: 1.15rem; letter-spacing: 0.02em; text-decoration: none; }
+  .nav-logo span { color: var(--teal); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--teal); }
+
+  /* HERO */
+  #home {
+    min-height: 100vh; background: var(--navy);
+    display: flex; align-items: flex-start;
+    padding: 8rem 4rem 6rem; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(29,158,117,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(29,158,117,0.06) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; width: 100%; max-width: 820px; }
+  .hero-tag {
+    display: inline-block; background: rgba(29,158,117,0.15);
+    border: 1px solid rgba(29,158,117,0.3); color: #5DCAA5;
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 2rem; margin-bottom: 1.5rem;
+  }
+  .hero-content h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.6rem); color: #fff; line-height: 1.15; margin-bottom: 2rem;
+  }
+  .hero-content h1 em { font-style: italic; color: #5DCAA5; }
+
+  /* MEDIA ROW */
+  .hero-media {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .media-slot {
+    border-radius: 8px; overflow: hidden;
+    border: 1.5px dashed rgba(93,202,165,0.35);
+    aspect-ratio: 16/9; background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .media-slot img,
+  .media-slot video,
+  .media-slot iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: none;
+  }
+  .media-placeholder {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.65rem; padding: 1.25rem; text-align: center;
+    pointer-events: none;
+  }
+  .media-icon { font-size: 2rem; opacity: 0.5; }
+  .media-label { color: rgba(255,255,255,0.35); font-size: 0.72rem; line-height: 1.5; }
+  .media-label code {
+    display: block; margin-top: 0.35rem; background: rgba(255,255,255,0.08);
+    color: #5DCAA5; padding: 0.3rem 0.6rem; border-radius: 4px;
+    font-family: monospace; font-size: 0.68rem; word-break: break-all;
+  }
+
+  /* QUOTE */
+  .cajal-quote {
+    border-left: 3px solid var(--teal);
+    padding: 0.85rem 1.5rem; margin-bottom: 2rem;
+    background: rgba(29,158,117,0.06); border-radius: 0 6px 6px 0;
+  }
+  .cajal-quote p {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 1.05rem; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 0.4rem;
+  }
+  .cajal-quote cite { font-size: 0.78rem; color: #5DCAA5; letter-spacing: 0.06em; }
+
+  /* INTRO TEXT */
+  .hero-intro { font-size: 1.05rem; color: rgba(255,255,255,0.65); max-width: 680px; margin-bottom: 2.5rem; line-height: 1.85; }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--teal); color: #fff; padding: 0.85rem 2rem; border-radius: 4px; text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em; transition: background 0.2s; }
+  .btn-primary:hover { background: var(--teal-mid); }
+  .btn-outline { border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); padding: 0.85rem 2rem; border-radius: 4px; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.04em; transition: border-color 0.2s, color 0.2s; }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+  /* STATS */
+  .hero-stats { position: absolute; bottom: 3rem; right: 4rem; display: flex; gap: 3rem; }
+  .stat-link { text-decoration: none; display: block; text-align: right; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #fff; display: block; transition: color 0.2s; }
+  .stat-link:hover .stat-num { color: #5DCAA5; }
+  .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.1em; }
+  .stat-note { font-size: 0.6rem; color: rgba(255,255,255,0.2); display: block; margin-top: 1px; }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal-mid); font-weight: 500; margin-bottom: 0.75rem; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 3.5vw, 2.8rem); color: var(--navy); line-height: 1.2; margin-bottom: 1rem; }
+  .section-intro { font-size: 1.05rem; color: var(--text-muted); max-width: 640px; margin-bottom: 3.5rem; line-height: 1.8; }
+
+  /* PEOPLE */
+  #people { background: var(--warm); }
+  .people-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+  .person-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+  .person-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(10,22,40,0.1); }
+  .person-photo { width: 100%; aspect-ratio: 1/1; background: linear-gradient(135deg, #e1f5ee 0%, #9FE1CB 100%); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--teal-mid); position: relative; overflow: hidden; }
+  .person-photo img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .person-info { padding: 1.25rem; }
+  .person-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.25rem; }
+  .person-role { font-size: 0.78rem; color: var(--teal-mid); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.6rem; }
+  .person-bio { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* PI */
+  .pi-card { background: var(--navy); border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: 280px 1fr; margin-bottom: 2.5rem; }
+  .pi-photo { background: linear-gradient(160deg, #1d9e75 0%, #085041 100%); min-height: 320px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 4rem; color: rgba(255,255,255,0.4); position: relative; overflow: hidden; }
+  .pi-photo img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .pi-info { padding: 2.5rem; }
+  .pi-tag { display: inline-block; background: rgba(29,158,117,0.2); color: #5DCAA5; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.3rem 0.85rem; border-radius: 2rem; margin-bottom: 1rem; }
+  .pi-info h3 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: #fff; margin-bottom: 0.35rem; }
+  .pi-info .pi-title { color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-bottom: 1.25rem; }
+  .pi-info p { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.25rem; }
+  .pi-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .pi-link { color: #5DCAA5; text-decoration: none; font-size: 0.82rem; border: 1px solid rgba(93,202,165,0.3); padding: 0.4rem 1rem; border-radius: 2rem; transition: background 0.2s; }
+  .pi-link:hover { background: rgba(93,202,165,0.1); }
+
+  /* RESEARCH */
+  #research { background: #fff; }
+  .research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .research-card { border: 1px solid var(--border); border-radius: 8px; padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.2s; }
+  .research-card:hover { border-color: var(--teal); }
+  .research-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .research-card:hover::before { transform: scaleX(1); }
+  .research-icon { width: 48px; height: 48px; background: var(--teal-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
+  .research-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--navy); margin-bottom: 0.75rem; }
+  .research-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+  .research-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+  .tag { background: var(--teal-light); color: var(--teal-mid); font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 2rem; font-weight: 500; letter-spacing: 0.04em; }
+
+  /* NEWS */
+  #news { background: var(--warm); }
+  .news-list { display: grid; gap: 1.25rem; }
+  .news-item { background: #fff; border-radius: 8px; padding: 1.5rem 1.75rem; display: grid; grid-template-columns: 100px 1fr; gap: 1.5rem; align-items: start; border: 1px solid var(--border); transition: transform 0.2s; }
+  .news-item:hover { transform: translateX(4px); }
+  .news-date { text-align: center; padding: 0.75rem; background: var(--teal-light); border-radius: 6px; }
+  .news-day { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--teal-mid); display: block; line-height: 1; }
+  .news-month { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal-mid); font-weight: 500; }
+  .news-type { display: inline-block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; padding: 0.2rem 0.65rem; border-radius: 2rem; margin-bottom: 0.5rem; }
+  .news-type.publication { background: #E6F1FB; color: #185FA5; }
+  .news-type.award { background: #FAEEDA; color: #854F0B; }
+  .news-type.event { background: #EEEDFE; color: #534AB7; }
+  .news-type.announcement { background: var(--teal-light); color: var(--teal-mid); }
+  .news-item h4 { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 0.35rem; }
+  .news-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* RESOURCES */
+  #resources { background: #fff; }
+  .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+  .resource-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; text-decoration: none; color: inherit; display: block; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+  .resource-card:hover { transform: translateY(-3px); border-color: var(--teal); box-shadow: 0 8px 24px rgba(10,22,40,0.07); }
+  .resource-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .resource-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.5rem; }
+  .resource-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+  .resource-link { font-size: 0.8rem; color: var(--teal-mid); font-weight: 500; letter-spacing: 0.04em; }
+
+  /* FOOTER */
+  footer { background: var(--navy); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-logo { font-family: 'DM Serif Display', serif; color: #fff; font-size: 1.1rem; }
+  .footer-logo span { color: #5DCAA5; }
+  footer p { color: rgba(255,255,255,0.4); font-size: 0.82rem; }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; margin-left: 1.5rem; transition: color 0.2s; }
+  footer a:hover { color: #5DCAA5; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    #home { padding: 7rem 1.5rem 5rem; }
+    .hero-media { grid-template-columns: 1fr; }
+    .hero-stats { position: static; margin-top: 3rem; justify-content: flex-start; gap: 2rem; }
+    .stat-link { text-align: left; }
+    .pi-card { grid-template-columns: 1fr; }
+    .pi-photo { min-height: 220px; }
+    footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#home"><span>UlloaSeverino</span>Lab</a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#previous-members">Alumni</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Neuroscience Research Group · <a href="https://cajal.csic.es/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Cajal Neuroscience Center (CNC-CSIC)</a></div>
+    <h1>Astrocyte-neuron interactions in <em>brain circuits</em> and behavioral control</h1>
+
+    <!-- ════════════════════════════════════════════════════
+         MEDIA ROW — place your image and video side by side.
+         To add an image: replace the entire <div class="media-placeholder">…</div>
+         inside the first .media-slot with:
+           <img src="images/your-photo.jpg" alt="Lab image">
+
+         To add a video file: replace the placeholder inside the second .media-slot with:
+           <video src="videos/your-video.mp4" controls></video>
+
+         To embed a YouTube video: replace the placeholder with:
+           <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
+    ════════════════════════════════════════════════════ -->
+    <div class="hero-media">
+      <div class="media-slot" style="aspect-ratio:unset;height:auto;">
+        <img src="lightsheet.jpg" alt="Lightsheet microscopy" style="position:static;width:100%;height:auto;object-fit:unset;">
+      </div>
+      <div class="media-slot" style="aspect-ratio:unset;height:auto;">
+        <video src="Reconstrucción 3D.mp4" controls autoplay muted playsinline loop style="position:static;width:100%;height:auto;object-fit:unset;"></video>
+      </div>
+    </div>
+
+    <!-- CAJAL QUOTE -->
+    <blockquote class="cajal-quote">
+      <p>"Any man could, if he were so inclined, be the sculptor of his own brain"</p>
+      <cite>— Santiago Ramón y Cajal</cite>
+    </blockquote>
+
+    <p class="hero-intro">Hi there! We are a young research group united by a common passion: understanding the mechanisms underlying brain functions. Our work bridges cellular neuroscience with systems-level approaches to understand how brain structure and function control voluntary behaviors.</p>
+
+    <div class="hero-actions">
+      <a href="#research" class="btn-primary">Our Research</a>
+      <a href="#people" class="btn-outline">Meet the Team</a>
+    </div>
+  </div>
+
+  <!-- STATS — citations & publications fetched live from Scholar via proxy; team count from People section -->
+  <div class="hero-stats">
+    <div>
+      <a href="https://scholar.google.com/citations?user=cm5Sfs0AAAAJ" target="_blank" rel="noopener" class="stat-link">
+        <span class="stat-num" id="stat-publications">…</span>
+        <span class="stat-label">Publications</span>
+        <span class="stat-note" id="stat-pub-source"></span>
+      </a>
+    </div>
+    <div>
+      <a href="https://scholar.google.com/citations?user=cm5Sfs0AAAAJ" target="_blank" rel="noopener" class="stat-link">
+        <span class="stat-num" id="stat-citations">…</span>
+        <span class="stat-label">Citations</span>
+        <span class="stat-note" id="stat-cit-source"></span>
+      </a>
+    </div>
+    <div>
+      <a href="#people" class="stat-link">
+        <span class="stat-num" id="stat-members">…</span>
+        <span class="stat-label">Team Members</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PEOPLE -->
+<section id="people">
+  <div class="section-label">The Team</div>
+  <h2 class="section-title">People</h2>
+  <p class="section-intro">Our lab brings together researchers at different stages of their scientific careers, united by curiosity and a shared passion for understanding the brain.</p>
+
+  <!-- PI -->
+  <div class="pi-card">
+    <div class="pi-photo">
+      <img src="FotoLabMembers/Foto_UlloaSeverino.jpg" alt="Francesco Paolo Ulloa Severino">
+    </div>
+    <div class="pi-info">
+      <div class="pi-tag">Principal Investigator</div>
+      <h3>Dr. Francesco Paolo Ulloa Severino</h3>
+      <p class="pi-title" style="margin-bottom:0.2rem;">Tenured Researcher (Científico Titular) · <a href="https://cajal.csic.es/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Cajal Neuroscience Center (CNC-CSIC)</a>, Madrid</p>
+      <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-bottom:1.25rem;">Department of Computational and Systems Neuroscience</p>
+      <p>Francesco is a Tenured Researcher at the Cajal Neuroscience Center (CNC) in Alcalá de Henares, Madrid (ES). He joined the Cajal Institute as a Ramón y Cajal awardee in 2023. He graduated in General and Applied Biology at the University of Naples Federico II, Napoli (IT), has a Master's in Molecular Biology, and earned his Ph.D. in Neurobiology at SISSA, Trieste (IT). In 2018, he started his postdoctoral research at Duke University (NC, USA).</p>
+      <p>Email: francesco.ulloa@cajal.csic.es &nbsp;·&nbsp; Av. de Leon 1, Campus Universitario, 28805 Alcalá de Henares, Madrid</p>
+      <div class="pi-links">
+        <a href="https://scholar.google.com/citations?user=cm5Sfs0AAAAJ" target="_blank" rel="noopener" class="pi-link">Google Scholar</a>
+        <a href="https://cajal.csic.es/en/astrocyte-neuron-interactions/" target="_blank" rel="noopener" class="pi-link">Institutional page</a>
+        <a href="https://www.researchgate.net/profile/Francesco-Ulloa-Severino" target="_blank" rel="noopener" class="pi-link">ResearchGate</a>
+        <a href="https://orcid.org/0000-0003-3725-9713" target="_blank" rel="noopener" class="pi-link">ORCID</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lab Members — each card counted by JS for the team stat -->
+  <div class="people-grid" id="people-grid">
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/MartaGonzalez.jpg" alt="Marta González Martín"></div>
+      <div class="person-info">
+        <div class="person-role">PhD Student</div>
+        <h3 class="person-name">Marta González Martín</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/Daniel.jpg" alt="Daniel Atienza Ramos"></div>
+      <div class="person-info">
+        <div class="person-role">Master Student · JAEintro Fellow</div>
+        <h3 class="person-name">Daniel Atienza Ramos</h3>
+        <p class="person-bio">Daniel holds a degree in Psychology from the Autonomous University of Madrid (UAM) and is currently a student of the Master's degree in Neuroscience at the same university. A fan of reading and sports, always eager to learn new things.</p>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/Sara Mozas Lendinez.jpg" alt="Sara Mozas Lendinez"></div>
+      <div class="person-info">
+        <div class="person-role">Master Student</div>
+        <h3 class="person-name">Sara Mozas Lendinez</h3>
+        <p class="person-bio">Sara holds a degree in Biotechnology and is currently pursuing a Master's degree in Neuroscience at the Autonomous University of Madrid (UAM). Two words define her: curiosity, which shapes her perspective, and precision, which guides her approach. Both are essential in research and in photography, another one of her passions.</p>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/Victor Illan Almarza.jpg" alt="Victor Illán Almarza"></div>
+      <div class="person-info">
+        <div class="person-role">Master Student · JAEintro Fellow</div>
+        <h3 class="person-name">Victor Illán Almarza</h3>
+        <p class="person-bio">Victor holds a degree in Health Biology from the University of Alcalá. After his bachelor thesis in our laboratory, he decided to stay with us and pursue his Master's degree in Neuroscience at the Autonomous University of Madrid. He is passionate about animals and reading, and his curiosity motivates him to keep learning and exploring new ideas.</p>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/MaikaFernandez.jpg" alt="Maika Fernandez"></div>
+      <div class="person-info">
+        <div class="person-role">Master Student</div>
+        <h3 class="person-name">Maika Fernandez</h3>
+        <p class="person-bio">Maika holds a degree in Biotechnology and is currently pursuing a Master's degree in Neuroscience at the Complutense University of Madrid (UCM). She is interested in research on the cellular and molecular mechanisms underlying the functioning of the nervous system. She considers herself persistent, proactive, and a strong team player. Outside the laboratory, she channels the same curiosity into traveling and reading.</p>
+      </div>
+    </div>
+
+    <!-- Recruiting card — NOT counted in team total -->
+    <div class="person-card" id="join-card" style="background:var(--teal-light);border:1.5px dashed rgba(15,110,86,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:280px;">
+      <div style="font-size:2rem;margin-bottom:1rem;">+</div>
+      <div class="person-role" style="color:var(--teal-mid);">We Are Recruiting</div>
+      <h3 class="person-name" style="color:var(--navy);">Join the Lab</h3>
+      <p class="person-bio" style="padding:0.5rem 1rem;">Motivated PhD students and postdocs are welcome to apply.</p>
+      <a href="mailto:francesco.ulloa@cajal.csic.es" style="margin-top:1rem;color:var(--teal-mid);font-size:0.85rem;font-weight:500;">Get in touch →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-label">What We Study</div>
+  <h2 class="section-title">Research Interests</h2>
+  <p class="section-intro">We combine molecular, cellular, and systems approaches to understand how astrocyte-neuron interactions shape brain circuits and control voluntary behaviors.</p>
+
+  <div class="research-grid">
+    <div class="research-card">
+      <div class="research-icon">🧠</div>
+      <h3>Astrocyte Structural Plasticity</h3>
+      <p>We investigate the mechanisms regulating adult astrocyte morphological remodeling and how changes in astrocyte structure influence synaptic function and circuit dynamics.</p>
+      <div class="research-tags"><span class="tag">Astrocytes</span><span class="tag">Morphology</span><span class="tag">Plasticity</span></div>
+    </div>
+    <div class="research-card">
+      <div class="research-icon">🔬</div>
+      <h3>Cortico-Striatal Circuits</h3>
+      <p>Using in vivo imaging and electrophysiology, we map how astrocyte-neuron interactions in the anterior cingulate cortex and dorsomedial striatum control goal-directed behaviors.</p>
+      <div class="research-tags"><span class="tag">ACC</span><span class="tag">Striatum</span><span class="tag">In vivo imaging</span></div>
+    </div>
+    <div class="research-card">
+      <div class="research-icon">💡</div>
+      <h3>Instrumental Learning & Behavior</h3>
+      <p>We study how operant conditioning reshapes excitatory synapses onto defined cortical-striatal projection neurons, controlling effort exertion and reward-based decision-making.</p>
+      <div class="research-tags"><span class="tag">Operant conditioning</span><span class="tag">Behavior</span><span class="tag">Synaptogenesis</span></div>
+    </div>
+    <div class="research-card">
+      <div class="research-icon">🧬</div>
+      <h3>Molecular Mechanisms</h3>
+      <p>We identify novel intracellular signaling pathways controlling astrocyte structural plasticity, using molecular tools, transcriptomics, and genetic approaches in vivo.</p>
+      <div class="research-tags"><span class="tag">Signaling</span><span class="tag">Genetics</span><span class="tag">scRNA-seq</span></div>
+    </div>
+    <div class="research-card">
+      <div class="research-icon">🐭</div>
+      <h3>Disease Models</h3>
+      <p>We model how disrupted astrocyte-neuron communication leads to motor and cognitive deficits characteristic of neurodegenerative and psychiatric diseases.</p>
+      <div class="research-tags"><span class="tag">Neurodegeneration</span><span class="tag">Psychiatric disorders</span><span class="tag">Translational</span></div>
+    </div>
+    <div class="research-card">
+      <div class="research-icon">🔧</div>
+      <h3>Custom & Open-Source Resources and Devices</h3>
+      <p>We design and share custom experimental devices and open-source tools to make neuroscience research more accessible, reproducible, and collaborative across laboratories.</p>
+      <div class="research-tags"><span class="tag">Open science</span><span class="tag">Custom hardware</span><span class="tag">Open source</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications" style="background:var(--warm);">
+  <div class="section-label">Scientific Output</div>
+  <h2 class="section-title">Publications</h2>
+  <p class="section-intro">* corresponding author &nbsp;·&nbsp; + co-first author</p>
+  <div style="display:flex; flex-direction:column; gap:1rem;">
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">1</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Irala D, Wang S, Sakers K, Nagendren L, Ulloa Severino FP, Sivadasan Bindu D, Eroglu C. Astrocyte-Secreted Neurocan Controls Inhibitory Synapse Formation and Function. <em>Neuron</em>, 2024. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">2</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Ulloa Severino FP*+, Lawal O+, Sakers K, Wang S, Kim N, Friedman A, Johnson SA, Sriworarat C, Hughes RN, Soderling S, Kim IH, Yin HH*, Eroglu C*. Training-induced circuit-specific excitatory synaptogenesis in mice is required for effort control. <em>Nature Communications</em>, 2023. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">3</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Fallon IP, Hughes RN, Ulloa Severino FP, Kim N, Lawry CM, Watson GDR, Roshchina M, Yin HH. The role of the parafascicular thalamic nucleus in action initiation and steering. <em>Current Biology</em>, 2023. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">4</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Petter AE, Fallon IP, Hughes RN, Watson GDR, Meck WH, Ulloa Severino FP, Yin HH. Elucidating a locus coeruleus-dentate gyrus dopamine pathway for operant reinforcement. <em>eLife</em>, 2023. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">5</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Zhang J, Hughes RN, Kim N, Fallon IP, Bakhurin K, Kim K, Ulloa Severino FP, Yin HH. A one-photon endoscope for simultaneous patterned optogenetic stimulation and calcium imaging in freely behaving mice. <em>Nature Biomedical Engineering</em>, 2023. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">6</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Lawal O, Ulloa Severino FP*, Eroglu C*. The role of astrocyte structural plasticity in regulating neural circuit function and behavior. <em>Glia</em>, 2022. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">7</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Watson GDR, Hughes RN, Petter EA, Fallon IP, Kim N, Ulloa Severino FP, Yin HH. Thalamic projections to the subthalamic nucleus contribute to movement initiation and rescue of parkinsonian symptoms. <em>Science Advances</em>, 2021. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">8</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Li S*, Ulloa Severino FP*, Ban J, Wang L, Pinato G, Torre V, Chen Y. Improved neuron culture using scaffolds made of three-dimensional PDMS micro-lattices. <em>Biomedical Materials</em>, 2018. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">9</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Rauti R, Lozano N, León V, Scaini V, Musto M, Rago I, Ulloa Severino FP, Fabbro A, Casalis L, Vázquez E, Kostarelos K, Prato M, Ballerini L. Graphene Oxide Nanosheets Reshape Synaptic Function in Cultured Brain Networks. <em>ACS Nano</em>, 2016. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.25rem 1.5rem; display:grid; grid-template-columns:2.5rem 1fr; gap:1rem; align-items:start;">
+      <span style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--teal-mid); text-align:center;">10</span>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.7; margin:0;">Ulloa Severino FP*, Ban J*, Song Q, Tang M, Bianconi G, Cheng G, Torre V. The role of dimensionality in neuronal network dynamics. <em>Scientific Reports</em>, 2016. <a href="#" style="color:var(--teal-mid); font-weight:500;">Online resource</a></p>
+    </div>
+
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="section-label">Latest Updates</div>
+  <h2 class="section-title">News</h2>
+  <p class="section-intro">Updates on publications, grants, awards, and lab events.</p>
+  <div class="news-list">
+
+    <div class="news-item" style="grid-template-columns:1fr;">
+      <div><p style="color:var(--text-muted);font-style:italic;">News coming soon. Stay tuned!</p></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PREVIOUS MEMBERS -->
+<section id="previous-members" style="background:#fff;">
+  <div class="section-label">Alumni</div>
+  <h2 class="section-title">Previous Lab Members</h2>
+  <p class="section-intro">We are grateful to all the researchers who have been part of our lab and contributed to our work.</p>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:1rem;">
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Ana_Nogueira.jpg" alt="Ana Nogueira García"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">Bachelor Student</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Ana Nogueira García</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Claudia.jpg" alt="Claudia del Cura Bordas"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">Bachelor Student</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Claudia del Cura Bordas</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Li Ying.jpg" alt="Li Ying Chen Chen"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">Master Student</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Li Ying Chen Chen</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Irene Torres Pulido.jpg" alt="Irene Torres Pulido"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">Bachelor Student</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Irene Torres Pulido</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Moses_A.jpg" alt="Moses Ataben"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">JAEintro 2024</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Moses Ataben</h3>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo" style="font-size:1.5rem;"><img src="FotoLabMembers/Previous lab members/Sergio Saez.jpg" alt="Sergio Sáez Sánchez"></div>
+      <div class="person-info" style="padding:0.75rem;">
+        <div class="person-role" style="font-size:0.7rem;">Bachelor Student</div>
+        <h3 class="person-name" style="font-size:0.9rem;">Sergio Sáez Sánchez</h3>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="section-label">Tools & Data</div>
+  <h2 class="section-title">Resources</h2>
+  <p class="section-intro">We are committed to open science. Below you'll find protocols, datasets, code, and other materials from our work.</p>
+  <div class="resources-grid">
+    <a href="#" class="resource-card">
+      <span class="resource-icon">📄</span>
+      <h3>Protocols</h3>
+      <p>Step-by-step experimental protocols for in vivo imaging, slice electrophysiology, viral injections, and behavioral paradigms.</p>
+      <span class="resource-link">Browse protocols →</span>
+    </a>
+    <a href="#" class="resource-card">
+      <span class="resource-icon">💾</span>
+      <h3>Datasets</h3>
+      <p>Open-access neural and behavioral datasets from our published work, hosted on Zenodo and the DANDI Archive.</p>
+      <span class="resource-link">Access data →</span>
+    </a>
+    <a href="https://github.com/UlloaSeverinoLab" target="_blank" rel="noopener" class="resource-card">
+      <span class="resource-icon">⚙️</span>
+      <h3>Analysis Code</h3>
+      <p>GitHub repositories with Python and MATLAB code for calcium imaging analysis, behavioral scoring, and circuit modeling.</p>
+      <span class="resource-link">View on GitHub →</span>
+    </a>
+    <a href="#" class="resource-card">
+      <span class="resource-icon">🖊️</span>
+      <h3>Lab Handbook</h3>
+      <p>Our internal guide covering lab culture, expectations, safety procedures, and onboarding for new members.</p>
+      <span class="resource-link">Read the handbook →</span>
+    </a>
+    <a href="#" class="resource-card">
+      <span class="resource-icon">📚</span>
+      <h3>Reading List</h3>
+      <p>A curated selection of foundational and cutting-edge papers relevant to astrocyte biology, circuits, and behavior.</p>
+      <span class="resource-link">View reading list →</span>
+    </a>
+    <a href="mailto:pi@cajal.csic.es" class="resource-card">
+      <span class="resource-icon">🎓</span>
+      <h3>For Prospective Members</h3>
+      <p>Information for students and postdocs interested in joining. We welcome motivated researchers at all career stages.</p>
+      <span class="resource-link">Get in touch →</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo"><span>UlloaSeverino</span>Lab</div>
+    <p style="margin-top:0.5rem;"><a href="https://cajal.csic.es/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Cajal Neuroscience Center (CNC-CSIC)</a> · Av. de Leon 1, Campus Universitario, 28805 Alcalá de Henares, Madrid</p>
+  </div>
+  <p>© 2025 UlloaSeverinoLab. All rights reserved.</p>
+  <div>
+    <a href="mailto:pi@cajal.csic.es">Contact</a>
+    <a href="#people">Team</a>
+    <a href="#resources">Resources</a>
+  </div>
+</footer>
+
+<script>
+/* ─── TEAM MEMBER COUNT ───────────────────────────────────────────
+   Counts .person-card elements inside #people-grid,
+   excluding the "Join the Lab" recruiting card (#join-card).
+   Add or remove person cards freely — this updates automatically. */
+(function countTeam() {
+  const grid  = document.getElementById('people-grid');
+  const join  = document.getElementById('join-card');
+  const total = grid.querySelectorAll('.person-card').length - (join ? 1 : 0);
+  document.getElementById('stat-members').textContent = total;
+})();
+
+/* ─── GOOGLE SCHOLAR STATS ───────────────────────────────────────
+   Google Scholar blocks direct browser requests (CORS + robots).
+   We try two public CORS proxies; if both fail we fall back to
+   the last-known values (802 citations, scraped May 2025).
+   To keep numbers fresh without a server you can:
+     1) Update FALLBACK_* below whenever you check your Scholar page.
+     2) Set up a small GitHub Action / serverless function that writes
+        a scholar.json to your repo nightly — then fetch that instead. */
+
+const SCHOLAR_URL  = 'https://scholar.google.com/citations?user=cm5Sfs0AAAAJ&hl=en';
+const FALLBACK_CIT = 802;   // ← update when you check Scholar
+const FALLBACK_PUB = '15+'; // ← update when you check Scholar
+
+const elCit    = document.getElementById('stat-citations');
+const elPub    = document.getElementById('stat-publications');
+const elCitSrc = document.getElementById('stat-cit-source');
+const elPubSrc = document.getElementById('stat-pub-source');
+
+function applyFallback() {
+  elCit.textContent    = FALLBACK_CIT;
+  elPub.textContent    = FALLBACK_PUB;
+  elCitSrc.textContent = 'last known';
+  elPubSrc.textContent = 'last known';
+}
+
+async function fetchScholar() {
+  /* allorigins proxies Google Scholar HTML so we can parse it client-side */
+  const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCHOLAR_URL);
+  try {
+    const res  = await fetch(proxyUrl, { signal: AbortSignal.timeout(7000) });
+    if (!res.ok) throw new Error('proxy error');
+    const json = await res.json();
+    const html = json.contents || '';
+
+    /* Citations: Scholar puts total citations in a td with id="gsc_rsb_st" table */
+    const citMatch = html.match(/Cited by[\s\S]*?<td[^>]*>(\d[\d,]*)<\/td>/i) ||
+                     html.match(/>(\d[\d,]+)<\/td>[\s\S]{0,200}All/);
+    /* Publications: count rows with class gsc_a_tr */
+    const pubMatches = (html.match(/gsc_a_tr/g) || []).length;
+
+    let cited = citMatch ? parseInt(citMatch[1].replace(/,/g,''), 10) : null;
+    let pubs  = pubMatches || null;
+
+    if (cited && cited > 0) {
+      elCit.textContent    = cited.toLocaleString();
+      elCitSrc.textContent = 'Google Scholar';
+    } else {
+      elCit.textContent    = FALLBACK_CIT;
+      elCitSrc.textContent = 'last known';
+    }
+
+    if (pubs && pubs > 0) {
+      elPub.textContent    = pubs;
+      elPubSrc.textContent = 'Google Scholar';
+    } else {
+      elPub.textContent    = FALLBACK_PUB;
+      elPubSrc.textContent = 'last known';
+    }
+  } catch (e) {
+    applyFallback();
+  }
+}
+
+fetchScholar();
+</script>
+</body>
+</html>
