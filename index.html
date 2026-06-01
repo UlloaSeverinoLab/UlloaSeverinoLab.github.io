@@ -171,20 +171,53 @@
 
   /* NEWS */
   #news { background: var(--warm); }
-  .news-list { display: grid; gap: 1.25rem; }
-  .news-item { background: #fff; border-radius: 8px; padding: 1.5rem 1.75rem; display: grid; grid-template-columns: 100px 1fr; gap: 1.5rem; align-items: start; border: 1px solid var(--border); transition: transform 0.2s; }
-  .news-item:hover { transform: translateX(4px); }
-  .news-date { text-align: center; padding: 0.75rem; background: var(--teal-light); border-radius: 6px; }
-  .news-day { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--teal-mid); display: block; line-height: 1; }
-  .news-month { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal-mid); font-weight: 500; }
   .news-type { display: inline-block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; padding: 0.2rem 0.65rem; border-radius: 2rem; margin-bottom: 0.5rem; }
   .news-type.publication { background: #E6F1FB; color: #185FA5; }
   .news-type.award { background: #FAEEDA; color: #854F0B; }
   .news-type.event { background: #EEEDFE; color: #534AB7; }
   .news-type.announcement { background: var(--teal-light); color: var(--teal-mid); }
-  .news-item h4 { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 0.35rem; }
-  .news-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
-  .news-img { width: 100%; height: auto; max-height: 320px; object-fit: contain; border-radius: 6px; margin-top: 1rem; display: block; }
+
+  /* News grid (first 6, with image) */
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .news-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; }
+  .news-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+  .news-card-img { position: relative; overflow: hidden; cursor: zoom-in; background: var(--teal-light); }
+  .news-card-img img { width: 100%; height: 180px; object-fit: cover; display: block; transition: transform 0.3s; }
+  .news-card-img:hover img { transform: scale(1.04); }
+  .news-card-zoom { position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.5); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; }
+  .news-card-img:hover .news-card-zoom { opacity: 1; }
+  .news-card-body { padding: 1.25rem; flex: 1; }
+  .news-card-date { font-size: 0.75rem; color: var(--teal-mid); font-weight: 500; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .news-card h4 { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--navy); margin: 0.35rem 0 0.5rem; line-height: 1.4; }
+  .news-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* News list (7th+ items, text only) */
+  .news-archive { display: flex; flex-direction: column; gap: 0.75rem; }
+  .news-archive-item { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; }
+  .news-archive-item h4 { font-family: 'DM Serif Display', serif; font-size: 0.95rem; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .news-archive-item h4:hover { color: var(--teal-mid); }
+  .news-archive-item h4 .toggle-arrow { font-size: 0.75rem; color: var(--teal-mid); flex-shrink: 0; transition: transform 0.2s; }
+  .news-archive-item h4.open .toggle-arrow { transform: rotate(180deg); }
+  .news-archive-date { font-size: 0.72rem; color: var(--teal-mid); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .news-archive-body { display: none; margin-top: 0.75rem; }
+  .news-archive-body.open { display: block; }
+  .news-archive-body p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+  .news-archive-body img { width: 100%; height: auto; border-radius: 6px; margin-top: 0.75rem; }
+
+  /* LIGHTBOX */
+  #lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lightbox.active { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
+  #lightbox-close { position: fixed; top: 1.25rem; right: 1.5rem; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; font-weight: 300; }
+
+  /* COOKIE BANNER */
+  #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy-mid); border-top: 1px solid rgba(255,255,255,0.08); padding: 1rem 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; z-index: 500; flex-wrap: wrap; }
+  #cookie-banner p { color: rgba(255,255,255,0.7); font-size: 0.82rem; line-height: 1.5; flex: 1; min-width: 200px; }
+  #cookie-banner a { color: #5DCAA5; }
+  .cookie-btns { display: flex; gap: 0.75rem; flex-shrink: 0; }
+  .cookie-btn { padding: 0.45rem 1.1rem; border-radius: 4px; font-size: 0.82rem; cursor: pointer; font-weight: 500; border: none; }
+  .cookie-accept { background: var(--teal); color: #fff; }
+  .cookie-reject { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.25) !important; }
 
   /* RESOURCES */
   #resources { background: #fff; }
@@ -292,7 +325,7 @@
     <li><a href="#previous-members">Alumni</a></li>
     <li><a href="#resources">Resources</a></li>
     <li style="display:flex;align-items:center;">
-      <span style="color:rgba(255,255,255,0.4);font-size:0.78rem;letter-spacing:0.04em;">👁 <span id="visit-count">—</span></span>
+      <span style="color:rgba(255,255,255,0.75);font-size:0.82rem;letter-spacing:0.04em;background:rgba(29,158,117,0.18);padding:0.25rem 0.75rem;border-radius:2rem;border:1px solid rgba(29,158,117,0.3);">👁 <span id="visit-count">—</span></span>
     </li>
   </ul>
 </nav>
@@ -571,19 +604,42 @@
   <div class="section-label">Latest Updates</div>
   <h2 class="section-title">News</h2>
   <p class="section-intro">Updates on publications, grants, awards, and lab events.</p>
-  <div class="news-list">
 
-    <div class="news-item">
-      <div class="news-date"><span class="news-day">26</span><span class="news-month">May 2026</span></div>
-      <div>
+  <!-- ── FIRST 6 NEWS ITEMS (grid with image) ─────────────────────────
+       Add new items at the TOP of this grid. When more than 6 exist,
+       move the oldest one to the archive list below.               -->
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="news-card-img" onclick="openLightbox('News_picture/Lablunch_May26.jpg')">
+        <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2026">
+        <span class="news-card-zoom">🔍</span>
+      </div>
+      <div class="news-card-body">
+        <div class="news-card-date">26 May 2026</div>
         <span class="news-type event">Event</span>
         <h4>Lab lunch with the Arévalo Lab</h4>
         <p>Our lab and the Arévalo Lab went out for lunch to say goodbye to Ivan, a visiting student from Argentina who spent 3 months with us. It was a wonderful time together — we wish Ivan all the best in his next adventures!</p>
-        <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2025" class="news-img">
       </div>
     </div>
 
   </div>
+
+  <!-- ── FROM 7TH ITEM ONWARD (text only, image on click) ────────────
+       Add older items here. Image appears only when title is clicked. -->
+  <div class="news-archive">
+    <!-- Example archive item (hidden by default):
+    <div class="news-archive-item">
+      <div class="news-archive-date">Jan 2023 · Announcement</div>
+      <h4 onclick="toggleArchive(this)">Title here <span class="toggle-arrow">▾</span></h4>
+      <div class="news-archive-body">
+        <p>Description here.</p>
+        <img src="News_picture/example.jpg" alt="...">
+      </div>
+    </div>
+    -->
+  </div>
+
 </section>
 
 <!-- PREVIOUS MEMBERS -->
@@ -786,19 +842,79 @@ fetchScholar();
 const COUNTER_OFFSET = 62;
 const counterEl = document.getElementById('visit-count');
 
+/* Set owner flag if URL hash is #owner (visit once to activate) */
+if (window.location.hash === '#owner') {
+  localStorage.setItem('isOwner', '1');
+  history.replaceState(null, '', window.location.pathname);
+}
+const isOwner = localStorage.getItem('isOwner') === '1';
+
 async function updateVisitCounter() {
   try {
-    const res = await fetch('https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up', { signal: AbortSignal.timeout(5000) });
+    /* Owners see the current count but don't increment it */
+    const endpoint = isOwner
+      ? 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews'
+      : 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up';
+    const res = await fetch(endpoint, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error();
     const data = await res.json();
     const count = (data.count || data.value || 1) + COUNTER_OFFSET;
-    counterEl.textContent = count.toLocaleString();
+    counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
     counterEl.textContent = COUNTER_OFFSET + 1;
   }
 }
 
 updateVisitCounter();
+
+/* ─── LIGHTBOX ───────────────────────────────────────────────── */
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  lb.classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* ─── NEWS ARCHIVE TOGGLE ────────────────────────────────────── */
+function toggleArchive(h4) {
+  const body = h4.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  h4.classList.toggle('open', !isOpen);
+}
+
+/* ─── COOKIE CONSENT ─────────────────────────────────────────── */
+(function() {
+  if (localStorage.getItem('cookieConsent')) return;
+  document.getElementById('cookie-banner').style.display = 'flex';
+})();
+function acceptCookies() {
+  localStorage.setItem('cookieConsent', 'accepted');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+function rejectCookies() {
+  localStorage.setItem('cookieConsent', 'rejected');
+  document.getElementById('cookie-banner').style.display = 'none';
+}
 </script>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">×</span>
+  <img id="lightbox-img" src="" alt="Full view">
+</div>
+
+<!-- COOKIE BANNER -->
+<div id="cookie-banner" style="display:none;">
+  <p>We use cookies to count visits and improve your experience. No personal data is collected. <a href="#" onclick="return false;">Learn more</a>.</p>
+  <div class="cookie-btns">
+    <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
+    <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Decline</button>
+  </div>
+</div>
+
 </body>
 </html>
