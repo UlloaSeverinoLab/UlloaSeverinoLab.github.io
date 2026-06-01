@@ -203,18 +203,60 @@
   footer a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; margin-left: 1.5rem; transition: color 0.2s; }
   footer a:hover { color: #5DCAA5; }
 
-  /* RESPONSIVE */
+  /* HAMBURGER */
+  .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; background: none; border: none; }
+  .nav-toggle span { display: block; width: 24px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: all 0.3s; }
+
+  /* TABLET (≤1024px) */
+  @media (max-width: 1024px) {
+    nav { padding: 0 2rem; }
+    .nav-links { gap: 1.5rem; }
+    section { padding: 5rem 2.5rem; }
+    #home { padding: 8rem 2.5rem 6rem; }
+    .hero-stats { right: 2.5rem; }
+    .pi-card { grid-template-columns: 220px 1fr; }
+    .pi-photo { min-height: 280px; }
+    .research-grid { grid-template-columns: repeat(2, 1fr); }
+    .resources-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { padding: 2.5rem 2.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    footer a { margin-left: 0; margin-right: 1.5rem; }
+  }
+
+  /* MOBILE (≤768px) */
   @media (max-width: 768px) {
-    nav { padding: 0 1.5rem; }
-    .nav-links { display: none; }
-    section { padding: 4rem 1.5rem; }
-    #home { padding: 7rem 1.5rem 5rem; }
+    nav { padding: 0 1.25rem; }
+    .nav-toggle { display: flex; }
+    .nav-links {
+      display: none; flex-direction: column; gap: 0;
+      position: absolute; top: 64px; left: 0; right: 0;
+      background: rgba(10,22,40,0.98); padding: 1rem 0;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li { width: 100%; }
+    .nav-links a { display: block; padding: 0.85rem 1.5rem; font-size: 0.9rem; letter-spacing: 0.05em; }
+    section { padding: 3.5rem 1.25rem; }
+    #home { padding: 6rem 1.25rem 4rem; }
     .hero-media { grid-template-columns: 1fr; }
-    .hero-stats { position: static; margin-top: 3rem; justify-content: flex-start; gap: 2rem; }
+    .hero-stats { position: static; margin-top: 2.5rem; justify-content: flex-start; gap: 1.5rem; flex-wrap: wrap; }
     .stat-link { text-align: left; }
     .pi-card { grid-template-columns: 1fr; }
-    .pi-photo { min-height: 220px; }
-    footer { padding: 2rem 1.5rem; }
+    .pi-photo { min-height: 240px; }
+    .pi-info { padding: 1.5rem; }
+    .research-grid { grid-template-columns: 1fr; }
+    .people-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .resources-grid { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.25rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    footer a { margin-left: 0; margin-right: 1.5rem; }
+  }
+
+  /* SMALL PHONES (≤480px) */
+  @media (max-width: 480px) {
+    .hero-content h1 { font-size: 1.8rem; }
+    .section-title { font-size: 1.6rem; }
+    .pi-card { grid-template-columns: 1fr; }
+    .people-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 1rem; }
+    .stat-num { font-size: 1.5rem; }
   }
 </style>
 </head>
@@ -223,6 +265,9 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#home"><span>UlloaSeverino</span>Lab</a>
+  <button class="nav-toggle" aria-label="Toggle menu" onclick="this.nextElementSibling.classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links">
     <li><a href="#home">Home</a></li>
     <li><a href="#people">People</a></li>
@@ -275,6 +320,11 @@
       <a href="#research" class="btn-primary">Our Research</a>
       <a href="#people" class="btn-outline">Meet the Team</a>
     </div>
+  </div>
+
+  <!-- VISITOR COUNTER -->
+  <div style="position:absolute; top:1.25rem; right:4rem;">
+    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fulloaseverinolab.github.io&count_bg=%231d9e75&title_bg=%230a1628&title=visitors&edge_flat=true" alt="Visitor counter" style="height:20px;">
   </div>
 
   <!-- STATS — citations & publications fetched live from Scholar via proxy; team count from People section -->
@@ -337,6 +387,7 @@
       <div class="person-info">
         <div class="person-role">PhD Student</div>
         <h3 class="person-name">Marta González Martín</h3>
+        <p class="person-bio">Marta earned her degree in Biology from the Autonomous University of Madrid, where she first gained laboratory experience in a research group within our center. She later completed a Master's degree in Translational Neuropsychopharmacology at Miguel Hernández University of Elche. Although she initially began her research career in other scientific fields, she soon realized that neuroscience was what truly sparked her scientific curiosity. This led her back to the Cajal Neuroscience Center, where she joined our laboratory to pursue her PhD. Alongside her enthusiasm for travel and CrossFit, Marta is passionate about uncovering how the brain works and how it shapes behavior.</p>
       </div>
     </div>
 
@@ -373,6 +424,14 @@
         <div class="person-role">Master Student</div>
         <h3 class="person-name">Maika Fernandez</h3>
         <p class="person-bio">Maika holds a degree in Biotechnology and is currently pursuing a Master's degree in Neuroscience at the Complutense University of Madrid (UCM). She is interested in research on the cellular and molecular mechanisms underlying the functioning of the nervous system. She considers herself persistent, proactive, and a strong team player. Outside the laboratory, she channels the same curiosity into traveling and reading.</p>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-photo"><img src="FotoLabMembers/Francesca Barracca.jpg" alt="Francesca Barracca"></div>
+      <div class="person-info">
+        <div class="person-role">Erasmus+ Student</div>
+        <h3 class="person-name">Francesca Barracca</h3>
       </div>
     </div>
 
