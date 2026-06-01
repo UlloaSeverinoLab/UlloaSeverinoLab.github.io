@@ -20,8 +20,8 @@
     --white: #ffffff;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; font-weight: 300; color: var(--text); background: var(--white); line-height: 1.7; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { font-family: 'DM Sans', sans-serif; font-weight: 300; color: var(--text); background: var(--white); line-height: 1.7; overflow-x: hidden; }
 
   /* NAV */
   nav {
@@ -204,59 +204,73 @@
   footer a:hover { color: #5DCAA5; }
 
   /* HAMBURGER */
-  .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; background: none; border: none; }
-  .nav-toggle span { display: block; width: 24px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: all 0.3s; }
+  .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; background: none; border: none; z-index: 200; }
+  .nav-toggle span { display: block; width: 24px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; }
 
   /* TABLET (≤1024px) */
   @media (max-width: 1024px) {
     nav { padding: 0 2rem; }
-    .nav-links { gap: 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .nav-links a { font-size: 0.78rem; }
     section { padding: 5rem 2.5rem; }
     #home { padding: 8rem 2.5rem 6rem; }
-    .hero-stats { right: 2.5rem; }
-    .pi-card { grid-template-columns: 220px 1fr; }
+    .hero-stats { right: 2.5rem; gap: 2rem; }
+    .pi-card { grid-template-columns: 200px 1fr; }
     .pi-photo { min-height: 280px; }
     .research-grid { grid-template-columns: repeat(2, 1fr); }
     .resources-grid { grid-template-columns: repeat(2, 1fr); }
-    footer { padding: 2.5rem 2.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    footer { padding: 2.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
     footer a { margin-left: 0; margin-right: 1.5rem; }
   }
 
   /* MOBILE (≤768px) */
   @media (max-width: 768px) {
-    nav { padding: 0 1.25rem; }
+    nav { padding: 0 1.25rem; position: fixed; }
     .nav-toggle { display: flex; }
     .nav-links {
-      display: none; flex-direction: column; gap: 0;
-      position: absolute; top: 64px; left: 0; right: 0;
-      background: rgba(10,22,40,0.98); padding: 1rem 0;
+      display: none !important; flex-direction: column; gap: 0;
+      position: fixed; top: 64px; left: 0; right: 0;
+      background: rgba(10,22,40,0.99); padding: 0.5rem 0;
+      z-index: 150; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
-    .nav-links.open { display: flex; }
+    .nav-links.open { display: flex !important; }
     .nav-links li { width: 100%; }
-    .nav-links a { display: block; padding: 0.85rem 1.5rem; font-size: 0.9rem; letter-spacing: 0.05em; }
+    .nav-links a { display: block; padding: 0.9rem 1.5rem; font-size: 0.95rem; letter-spacing: 0.04em; border-bottom: 1px solid rgba(255,255,255,0.06); }
     section { padding: 3.5rem 1.25rem; }
-    #home { padding: 6rem 1.25rem 4rem; }
+    #home { padding: 6rem 1.25rem 12rem; min-height: auto; }
     .hero-media { grid-template-columns: 1fr; }
+    .hero-content { max-width: 100%; }
     .hero-stats { position: static; margin-top: 2.5rem; justify-content: flex-start; gap: 1.5rem; flex-wrap: wrap; }
     .stat-link { text-align: left; }
+    .cajal-quote p { font-size: 0.95rem; }
     .pi-card { grid-template-columns: 1fr; }
     .pi-photo { min-height: 240px; }
     .pi-info { padding: 1.5rem; }
+    .pi-links { flex-wrap: wrap; }
     .research-grid { grid-template-columns: 1fr; }
-    .people-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .people-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     .resources-grid { grid-template-columns: 1fr; }
     footer { padding: 2rem 1.25rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
     footer a { margin-left: 0; margin-right: 1.5rem; }
+    footer div:last-child { display: flex; flex-wrap: wrap; }
   }
 
   /* SMALL PHONES (≤480px) */
   @media (max-width: 480px) {
-    .hero-content h1 { font-size: 1.8rem; }
-    .section-title { font-size: 1.6rem; }
+    nav { padding: 0 1rem; }
+    .nav-logo { font-size: 1rem; }
+    .hero-content h1 { font-size: 1.7rem; }
+    .hero-tag { font-size: 0.68rem; }
+    .section-title { font-size: 1.5rem; }
     .pi-card { grid-template-columns: 1fr; }
     .people-grid { grid-template-columns: 1fr 1fr; }
     .hero-stats { gap: 1rem; }
-    .stat-num { font-size: 1.5rem; }
+    .stat-num { font-size: 1.4rem; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-outline { text-align: center; }
+    .pi-info h3 { font-size: 1.4rem; }
+    section { padding: 3rem 1rem; }
+    #home { padding: 5.5rem 1rem 10rem; }
   }
 </style>
 </head>
@@ -320,11 +334,6 @@
       <a href="#research" class="btn-primary">Our Research</a>
       <a href="#people" class="btn-outline">Meet the Team</a>
     </div>
-  </div>
-
-  <!-- VISITOR COUNTER -->
-  <div style="position:absolute; top:1.25rem; right:4rem;">
-    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fulloaseverinolab.github.io&count_bg=%231d9e75&title_bg=%230a1628&title=visitors&edge_flat=true" alt="Visitor counter" style="height:20px;">
   </div>
 
   <!-- STATS — citations & publications fetched live from Scholar via proxy; team count from People section -->
@@ -676,7 +685,12 @@
     <div class="footer-logo"><span>UlloaSeverino</span>Lab</div>
     <p style="margin-top:0.5rem;"><a href="https://cajal.csic.es/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Cajal Neuroscience Center (CNC-CSIC)</a> · Av. de Leon 1, Campus Universitario, 28805 Alcalá de Henares, Madrid</p>
   </div>
-  <p>© 2025 UlloaSeverinoLab. All rights reserved.</p>
+  <div style="text-align:center;">
+    <p style="color:rgba(255,255,255,0.35); font-size:0.75rem; margin-bottom:0.25rem;">
+      👁 <span id="visit-count">—</span> visits
+    </p>
+    <p>© 2025 UlloaSeverinoLab. All rights reserved.</p>
+  </div>
   <div>
     <a href="mailto:pi@cajal.csic.es">Contact</a>
     <a href="#people">Team</a>
@@ -760,6 +774,26 @@ async function fetchScholar() {
 }
 
 fetchScholar();
+
+/* ─── VISITOR COUNTER ────────────────────────────────────────────
+   Uses CounterAPI.dev (free, no account needed).
+   An offset of 62 is added so the display starts at 63.          */
+const COUNTER_OFFSET = 62;
+const counterEl = document.getElementById('visit-count');
+
+async function updateVisitCounter() {
+  try {
+    const res = await fetch('https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up', { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const count = (data.count || data.value || 1) + COUNTER_OFFSET;
+    counterEl.textContent = count.toLocaleString();
+  } catch {
+    counterEl.textContent = COUNTER_OFFSET + 1;
+  }
+}
+
+updateVisitCounter();
 </script>
 </body>
 </html>
