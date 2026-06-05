@@ -799,14 +799,17 @@
 })();
 
 /* ─── PUBLICATION & CITATION STATS via OpenAlex ─────────────────
-   OpenAlex is a free, open academic database with a proper JSON API
-   and full CORS support — no scraping, no proxy, always up to date.
-   It finds the author via ORCID, so it's always the right person.
-   Falls back to last-known values if the API is unreachable.        */
+   Fetches all works for the author, then:
+   1. Keeps only journal articles and preprints (bioRxiv / posted-content).
+   2. Groups works by normalised title to catch preprint+journal duplicates.
+   3. For each group: keeps the journal version as canonical, sums citations
+      across all versions (preprint + journal).
+   4. Displays deduplicated publication count and summed citation total.
+   Falls back to last-known values if the API is unreachable.             */
 
-const OPENALEX_URL = 'https://api.openalex.org/authors?filter=orcid:0000-0003-3725-9713&mailto=francesco.ulloa@cajal.csic.es';
-const FALLBACK_CIT = 992;   // ← update manually if needed as a last resort
-const FALLBACK_PUB = 10;    // ← update manually if needed as a last resort
+const OPENALEX_AUTHOR_URL = 'https://api.openalex.org/authors?filter=orcid:0000-0003-3725-9713&mailto=francesco.ulloa@cajal.csic.es';
+const FALLBACK_CIT = 992;  // ← update as last resort if API is unreachable
+const FALLBACK_PUB = 10;   // ← update as last resort if API is unreachable
 
 const elCit    = document.getElementById('stat-citations');
 const elPub    = document.getElementById('stat-publications');
@@ -820,32 +823,79 @@ function applyFallback() {
   elPubSrc.textContent = 'last known';
 }
 
+/* Strips punctuation/case so "Foo: a study." and "foo a study" match */
+function normaliseTitle(t) {
+  return (t || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 async function fetchScholar() {
   try {
-    const res  = await fetch(OPENALEX_URL, { signal: AbortSignal.timeout(7000) });
-    if (!res.ok) throw new Error('openalex error');
-    const json = await res.json();
-    const author = json.results && json.results[0];
-    if (!author) throw new Error('no author found');
+    /* ── Step 1: resolve author OpenAlex ID from ORCID ── */
+    const authorRes = await fetch(OPENALEX_AUTHOR_URL, { signal: AbortSignal.timeout(7000) });
+    if (!authorRes.ok) throw new Error('author lookup failed');
+    const authorJson = await authorRes.json();
+    const author = authorJson.results && authorJson.results[0];
+    if (!author) throw new Error('author not found');
+    const authorId = author.id.replace('https://openalex.org/', '');
 
-    const cited = author.cited_by_count;
-    const pubs  = author.works_count;
+    /* ── Step 2: fetch all works (up to 200; more than enough) ── */
+    const worksUrl = `https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type,primary_location&mailto=francesco.ulloa@cajal.csic.es`;
+    const worksRes = await fetch(worksUrl, { signal: AbortSignal.timeout(10000) });
+    if (!worksRes.ok) throw new Error('works fetch failed');
+    const worksJson = await worksRes.json();
+    const works = worksJson.results || [];
 
-    if (cited > 0) {
-      elCit.textContent    = cited.toLocaleString();
+    /* ── Step 3: keep only journal articles and preprints ── */
+    const relevant = works.filter(w =>
+      w.type === 'journal-article' || w.type === 'posted-content'
+    );
+
+    /* ── Step 4: group by normalised title ── */
+    const groups = {};
+    for (const work of relevant) {
+      const key = normaliseTitle(work.title);
+      if (!key) continue;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(work);
+    }
+
+    /* ── Step 5: deduplicate and sum citations ── */
+    let totalCitations = 0;
+    let totalPubs      = 0;
+
+    for (const group of Object.values(groups)) {
+      const hasJournal = group.some(w => w.type === 'journal-article');
+
+      /* Skip standalone preprints that have a journal counterpart
+         already captured in another group — shouldn't happen with
+         title-matching, but skip pure preprints with no journal
+         version only if explicitly requested; here we keep them. */
+      if (!hasJournal && group.every(w => w.type === 'posted-content')) {
+        /* Preprint only — count it (bioRxiv counts) */
+      }
+      /* Sum citations across all versions (preprint + journal) */
+      const sumCit = group.reduce((s, w) => s + (w.cited_by_count || 0), 0);
+      totalCitations += sumCit;
+      totalPubs++;
+    }
+
+    /* ── Step 6: update display ── */
+    if (totalCitations > 0) {
+      elCit.textContent    = totalCitations.toLocaleString();
       elCitSrc.textContent = 'OpenAlex';
     } else {
       elCit.textContent    = FALLBACK_CIT.toLocaleString();
       elCitSrc.textContent = 'last known';
     }
 
-    if (pubs > 0) {
-      elPub.textContent    = pubs;
+    if (totalPubs > 0) {
+      elPub.textContent    = totalPubs;
       elPubSrc.textContent = 'OpenAlex';
     } else {
       elPub.textContent    = FALLBACK_PUB;
       elPubSrc.textContent = 'last known';
     }
+
   } catch (e) {
     applyFallback();
   }
