@@ -114,6 +114,10 @@
   .hero-intro { font-size: 1.05rem; color: rgba(255,255,255,0.65); max-width: 680px; margin-bottom: 2.5rem; line-height: 1.85; }
 
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero-social { display: flex; gap: 0.65rem; margin-top: 1.5rem; align-items: center; }
+  .social-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.55); text-decoration: none; transition: border-color 0.2s, color 0.2s, background 0.2s; flex-shrink: 0; }
+  .social-icon:hover { border-color: var(--teal); color: var(--teal); background: rgba(29,158,117,0.12); }
+  .social-icon svg { width: 17px; height: 17px; fill: currentColor; }
   .btn-primary { background: var(--teal); color: #fff; padding: 0.85rem 2rem; border-radius: 4px; text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em; transition: background 0.2s; }
   .btn-primary:hover { background: var(--teal-mid); }
   .btn-outline { border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); padding: 0.85rem 2rem; border-radius: 4px; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.04em; transition: border-color 0.2s, color 0.2s; }
@@ -376,6 +380,29 @@
     <div class="hero-actions">
       <a href="#research" class="btn-primary">Our Research</a>
       <a href="#people" class="btn-outline">Meet the Team</a>
+    </div>
+
+    <div class="hero-social">
+      <!-- Google Scholar -->
+      <a href="https://scholar.google.com/citations?user=cm5Sfs0AAAAJ" target="_blank" rel="noopener" class="social-icon" title="Google Scholar">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
+      </a>
+      <!-- ORCID -->
+      <a href="https://orcid.org/0000-0003-3725-9713" target="_blank" rel="noopener" class="social-icon" title="ORCID">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.516.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 3.872-2.484 3.872-3.722 0-2.016-1.284-3.722-3.884-3.722h-2.285z"/></svg>
+      </a>
+      <!-- ResearchGate -->
+      <a href="https://www.researchgate.net/profile/Francesco-Ulloa-Severino" target="_blank" rel="noopener" class="social-icon" title="ResearchGate">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a12.45 12.45 0 0 0-.34 2.627l-.016.233v.5c0 .343.013.684.04 1.022-.61-.178-1.475-.267-2.594-.267H8.02c-2.21 0-3.73.41-4.561 1.23-.83.82-1.247 2.253-1.247 4.3v2.38c0 2.043.417 3.478 1.247 4.302.831.824 2.351 1.236 4.56 1.236h4.844c2.21 0 3.731-.413 4.562-1.236.83-.824 1.247-2.259 1.247-4.302V12.5c.65.13 1.311.186 1.983.168l.022-.001c.81 0 1.493-.19 2.05-.567.558-.378.958-.934 1.198-1.668.24-.735.36-1.662.36-2.78v-.5c0-1.075-.11-1.981-.332-2.715-.22-.735-.592-1.288-1.118-1.66C21.116.189 20.415 0 19.586 0zm-6.38 9.118c.6 0 1.1.076 1.499.23.398.152.71.39.934.714.224.322.378.745.46 1.27.082.524.123 1.154.123 1.89v.516c0 .734-.04 1.364-.122 1.89-.082.525-.236.948-.46 1.27-.224.324-.536.562-.934.714-.398.153-.9.23-1.5.23h-1.11v-8.72h1.11zm-5.437.074c.45 0 .882.06 1.296.178v2.09c-.37-.193-.776-.29-1.216-.29-.53 0-.965.16-1.303.482-.34.322-.508.766-.508 1.33v3.82H4.16v-7.61h1.878v.955c.247-.345.55-.61.908-.797.359-.186.752-.278 1.18-.278l.644.12zm11.817-7.717c.44 0 .806.104 1.097.31.29.207.504.523.637.945.135.423.202.978.202 1.668v.5c0 .693-.067 1.25-.2 1.67-.134.42-.347.736-.636.944-.29.208-.657.313-1.1.313-.44 0-.806-.105-1.097-.313-.29-.208-.504-.524-.637-.945-.133-.422-.2-.977-.2-1.67v-.5c0-.69.067-1.245.2-1.668.133-.422.346-.738.637-.945.29-.206.657-.31 1.097-.31z"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener" class="social-icon" title="LinkedIn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <!-- Bluesky -->
+      <a href="https://bsky.app/profile/ulloaseverinolab.bsky.social" target="_blank" rel="noopener" class="social-icon" title="Bluesky">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>
+      </a>
     </div>
   </div>
 
@@ -798,110 +825,93 @@
   document.getElementById('stat-members').textContent = total;
 })();
 
-/* ─── PUBLICATION & CITATION STATS via OpenAlex ─────────────────
-   Fetches all works for the author, then:
-   1. Keeps only journal articles and preprints (bioRxiv / posted-content).
-   2. Groups works by normalised title to catch preprint+journal duplicates.
-   3. For each group: keeps the journal version as canonical, sums citations
-      across all versions (preprint + journal).
-   4. Displays deduplicated publication count and summed citation total.
-   Falls back to last-known values if the API is unreachable.             */
+/* ─── PUBLICATION & CITATION STATS ──────────────────────────────
+   Publications : ORCID public API — authoritative, counts every
+                  item the researcher has added to their profile.
+   Citations    : OpenAlex — deduplicated across preprint + journal
+                  versions of the same paper (titles matched).
+   Both run in parallel; each falls back independently.            */
 
-const OPENALEX_AUTHOR_URL = 'https://api.openalex.org/authors?filter=orcid:0000-0003-3725-9713&mailto=francesco.ulloa@cajal.csic.es';
-const FALLBACK_CIT = 992;  // ← update as last resort if API is unreachable
-const FALLBACK_PUB = 10;   // ← update as last resort if API is unreachable
+const ORCID      = '0000-0003-3725-9713';
+const OA_MAILTO  = 'mailto=francesco.ulloa@cajal.csic.es';
+const FALLBACK_CIT = 992;  // update manually only if both APIs fail
+const FALLBACK_PUB = 25;   // verified on ORCID profile June 2026
 
 const elCit    = document.getElementById('stat-citations');
 const elPub    = document.getElementById('stat-publications');
 const elCitSrc = document.getElementById('stat-cit-source');
 const elPubSrc = document.getElementById('stat-pub-source');
 
-function applyFallback() {
-  elCit.textContent    = FALLBACK_CIT.toLocaleString();
-  elPub.textContent    = FALLBACK_PUB;
-  elCitSrc.textContent = 'last known';
-  elPubSrc.textContent = 'last known';
+/* ── Publications from ORCID ── */
+async function fetchPubs() {
+  try {
+    const res  = await fetch(`https://pub.orcid.org/v3.0/${ORCID}/works`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(7000)
+    });
+    if (!res.ok) throw new Error();
+    const data  = await res.json();
+    const count = (data.group || []).length;
+    if (count > 0) {
+      elPub.textContent    = count;
+      elPubSrc.textContent = 'ORCID';
+    } else {
+      throw new Error();
+    }
+  } catch {
+    elPub.textContent    = FALLBACK_PUB;
+    elPubSrc.textContent = 'last known';
+  }
 }
 
-/* Strips punctuation/case so "Foo: a study." and "foo a study" match */
+/* ── Citations from OpenAlex (preprint+journal deduplication) ── */
 function normaliseTitle(t) {
   return (t || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
 }
 
-async function fetchScholar() {
+async function fetchCitations() {
   try {
-    /* ── Step 1: resolve author OpenAlex ID from ORCID ── */
-    const authorRes = await fetch(OPENALEX_AUTHOR_URL, { signal: AbortSignal.timeout(7000) });
-    if (!authorRes.ok) throw new Error('author lookup failed');
-    const authorJson = await authorRes.json();
-    const author = authorJson.results && authorJson.results[0];
-    if (!author) throw new Error('author not found');
+    /* Resolve OpenAlex author ID via ORCID */
+    const aRes  = await fetch(`https://api.openalex.org/authors?filter=orcid:${ORCID}&${OA_MAILTO}`, { signal: AbortSignal.timeout(7000) });
+    if (!aRes.ok) throw new Error();
+    const aJson = await aRes.json();
+    const author = aJson.results && aJson.results[0];
+    if (!author) throw new Error();
     const authorId = author.id.replace('https://openalex.org/', '');
 
-    /* ── Step 2: fetch all works (up to 200; more than enough) ── */
-    const worksUrl = `https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type,primary_location&mailto=francesco.ulloa@cajal.csic.es`;
-    const worksRes = await fetch(worksUrl, { signal: AbortSignal.timeout(10000) });
-    if (!worksRes.ok) throw new Error('works fetch failed');
-    const worksJson = await worksRes.json();
-    const works = worksJson.results || [];
+    /* Fetch all works */
+    const wRes  = await fetch(`https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type&${OA_MAILTO}`, { signal: AbortSignal.timeout(10000) });
+    if (!wRes.ok) throw new Error();
+    const works = (await wRes.json()).results || [];
 
-    /* ── Step 3: keep only journal articles and preprints ── */
-    const relevant = works.filter(w =>
-      w.type === 'journal-article' || w.type === 'posted-content'
-    );
+    /* Keep journal articles and preprints only */
+    const relevant = works.filter(w => w.type === 'journal-article' || w.type === 'posted-content');
 
-    /* ── Step 4: group by normalised title ── */
+    /* Group by normalised title, sum citations per group */
     const groups = {};
-    for (const work of relevant) {
-      const key = normaliseTitle(work.title);
+    for (const w of relevant) {
+      const key = normaliseTitle(w.title);
       if (!key) continue;
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(work);
+      if (!groups[key]) groups[key] = 0;
+      groups[key] += (w.cited_by_count || 0);
     }
 
-    /* ── Step 5: deduplicate and sum citations ── */
-    let totalCitations = 0;
-    let totalPubs      = 0;
-
-    for (const group of Object.values(groups)) {
-      const hasJournal = group.some(w => w.type === 'journal-article');
-
-      /* Skip standalone preprints that have a journal counterpart
-         already captured in another group — shouldn't happen with
-         title-matching, but skip pure preprints with no journal
-         version only if explicitly requested; here we keep them. */
-      if (!hasJournal && group.every(w => w.type === 'posted-content')) {
-        /* Preprint only — count it (bioRxiv counts) */
-      }
-      /* Sum citations across all versions (preprint + journal) */
-      const sumCit = group.reduce((s, w) => s + (w.cited_by_count || 0), 0);
-      totalCitations += sumCit;
-      totalPubs++;
-    }
-
-    /* ── Step 6: update display ── */
-    if (totalCitations > 0) {
-      elCit.textContent    = totalCitations.toLocaleString();
+    const total = Object.values(groups).reduce((s, n) => s + n, 0);
+    if (total > 0) {
+      elCit.textContent    = total.toLocaleString();
       elCitSrc.textContent = 'OpenAlex';
     } else {
-      elCit.textContent    = FALLBACK_CIT.toLocaleString();
-      elCitSrc.textContent = 'last known';
+      throw new Error();
     }
-
-    if (totalPubs > 0) {
-      elPub.textContent    = totalPubs;
-      elPubSrc.textContent = 'OpenAlex';
-    } else {
-      elPub.textContent    = FALLBACK_PUB;
-      elPubSrc.textContent = 'last known';
-    }
-
-  } catch (e) {
-    applyFallback();
+  } catch {
+    elCit.textContent    = FALLBACK_CIT.toLocaleString();
+    elCitSrc.textContent = 'last known';
   }
 }
 
-fetchScholar();
+/* Run both in parallel */
+fetchPubs();
+fetchCitations();
 
 /* ─── VISITOR COUNTER ────────────────────────────────────────────
    Uses CounterAPI.dev (free, no account needed).
