@@ -218,6 +218,10 @@
   .cookie-btn { padding: 0.45rem 1.1rem; border-radius: 4px; font-size: 0.82rem; cursor: pointer; font-weight: 500; border: none; }
   .cookie-accept { background: var(--teal); color: #fff; }
   .cookie-reject { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.25) !important; }
+  @media (max-width: 768px) {
+    #cookie-banner { padding: 1rem 1.25rem; }
+    #cookie-info { bottom: 8rem; }
+  }
 
   /* RESOURCES */
   #resources { background: #fff; }
@@ -612,6 +616,22 @@
   <div class="news-grid">
 
     <div class="news-card">
+      <div class="news-card-img" onclick="openLightbox('News_picture/MartaPoster1_astrocytecafe26.jpg')">
+        <img src="News_picture/MartaPoster1_astrocytecafe26.jpg" alt="Marta presenting her poster at Astrocyte Café 2026">
+        <span class="news-card-zoom">🔍</span>
+      </div>
+      <div class="news-card-body">
+        <div class="news-card-date">June 2026</div>
+        <span class="news-type event">Event</span>
+        <h4>Marta presents at the Astrocyte Café 2026 in Pamplona</h4>
+        <p>Marta González Martín travelled to Pamplona to present her PhD work at the <strong>Astrocyte Café 2026</strong>, a meeting dedicated to the latest advances in astrocyte biology. She did a fantastic job representing the lab — congrats Marta!
+          <br><br>
+          <span style="cursor:pointer;color:var(--teal-mid);font-size:0.82rem;font-weight:500;" onclick="event.stopPropagation();openLightbox('News_picture/MartaPoster2_astrocytecafe26.jpg')">📷 View second photo →</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="news-card">
       <div class="news-card-img" onclick="openLightbox('News_picture/Lablunch_May26.jpg')">
         <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2026">
         <span class="news-card-zoom">🔍</span>
@@ -839,6 +859,7 @@ fetchScholar();
 
 /* ─── VISITOR COUNTER ────────────────────────────────────────────
    Uses CounterAPI.dev (free, no account needed).
+   Only runs if the user has accepted cookies.
    An offset of 62 is added so the display starts at 63.          */
 const COUNTER_OFFSET = 62;
 const counterEl = document.getElementById('visit-count');
@@ -862,11 +883,14 @@ async function updateVisitCounter() {
     const count = (data.count || data.value || 1) + COUNTER_OFFSET;
     counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
-    counterEl.textContent = COUNTER_OFFSET + 1;
+    counterEl.textContent = '—';
   }
 }
 
-updateVisitCounter();
+/* Only fire the counter if cookies were accepted */
+if (localStorage.getItem('cookieConsent') === 'accepted') {
+  updateVisitCounter();
+}
 
 /* ─── LIGHTBOX ───────────────────────────────────────────────── */
 function openLightbox(src) {
@@ -889,16 +913,31 @@ function toggleArchive(h4) {
 
 /* ─── COOKIE CONSENT ─────────────────────────────────────────── */
 (function() {
-  if (localStorage.getItem('cookieConsent')) return;
-  document.getElementById('cookie-banner').style.display = 'flex';
+  const consent = localStorage.getItem('cookieConsent');
+  if (!consent) {
+    /* No decision yet — show banner */
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }
 })();
+
 function acceptCookies() {
   localStorage.setItem('cookieConsent', 'accepted');
   document.getElementById('cookie-banner').style.display = 'none';
+  /* Start the visit counter now that the user consented */
+  updateVisitCounter();
 }
+
 function rejectCookies() {
   localStorage.setItem('cookieConsent', 'rejected');
   document.getElementById('cookie-banner').style.display = 'none';
+  document.getElementById('cookie-info').style.display = 'none';
+  /* Counter stays silent; show a dash */
+  counterEl.textContent = '—';
+}
+
+function toggleCookieInfo() {
+  const info = document.getElementById('cookie-info');
+  info.style.display = info.style.display === 'none' ? 'block' : 'none';
 }
 </script>
 
@@ -909,12 +948,24 @@ function rejectCookies() {
 </div>
 
 <!-- COOKIE BANNER -->
-<div id="cookie-banner" style="display:none;">
-  <p>We use cookies to count visits and improve your experience. No personal data is collected. <a href="#" onclick="return false;">Learn more</a>.</p>
+<div id="cookie-banner" style="display:none;" role="dialog" aria-label="Cookie consent">
+  <p>
+    We use a single anonymous cookie to count page visits — no personal data is collected or shared.
+    If you decline, no cookie will be set and the visit counter will be disabled.
+    <button onclick="toggleCookieInfo()" style="background:none;border:none;color:#5DCAA5;font-size:0.82rem;cursor:pointer;padding:0;text-decoration:underline;">Learn more</button>
+  </p>
   <div class="cookie-btns">
     <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
     <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Decline</button>
   </div>
+</div>
+<!-- Cookie info tooltip -->
+<div id="cookie-info" style="display:none;position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);max-width:480px;width:90%;background:#132040;border:1px solid rgba(93,202,165,0.25);border-radius:8px;padding:1.25rem 1.5rem;z-index:501;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+  <p style="color:rgba(255,255,255,0.8);font-size:0.82rem;line-height:1.7;margin:0 0 0.75rem;">
+    <strong style="color:#fff;">What we use cookies for</strong><br>
+    We use <a href="https://counterapi.dev" target="_blank" rel="noopener" style="color:#5DCAA5;">CounterAPI</a> to count the number of times this page is visited. This sets a single, anonymous counter — no identifiers, no tracking across sites, no third-party advertising. No personal data is collected or transmitted.
+  </p>
+  <button onclick="toggleCookieInfo()" style="background:none;border:1px solid rgba(93,202,165,0.3);color:#5DCAA5;font-size:0.78rem;padding:0.3rem 0.85rem;border-radius:2rem;cursor:pointer;">Close</button>
 </div>
 
 </body>
