@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ulloa-Severino Lab | Neuroscience Research</title>
+<!-- Hide cookie banner immediately if consent already given — must run before first paint -->
+<script>if(localStorage.getItem('cookieConsent')){document.write('<style>#cookie-banner{display:none!important}</style>');}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -863,15 +865,12 @@ fetchScholar();
 
 /* ─── VISITOR COUNTER ────────────────────────────────────────────
    Uses CounterAPI.dev (free, no account needed).
-   Fallback value always shown immediately.
-   The live API call (which increments) only fires on consent.
+   Shows … until the real number arrives (no fallback flash).
+   Owners always get the live count regardless of cookie consent.
+   Regular visitors only increment/read if they accepted cookies.
    An offset of 62 is added so the display starts at 63.          */
 const COUNTER_OFFSET = 62;
-const FALLBACK_COUNT  = COUNTER_OFFSET + 1;
 const counterEl = document.getElementById('visit-count');
-
-/* Show fallback immediately so there's always a number */
-counterEl.textContent = FALLBACK_COUNT;
 
 /* Set owner flag if URL hash is #owner (visit once to activate) */
 if (window.location.hash === '#owner') {
@@ -882,7 +881,7 @@ const isOwner = localStorage.getItem('isOwner') === '1';
 
 async function updateVisitCounter() {
   try {
-    /* Owners see the current count but don't increment it */
+    /* Owners read without incrementing; visitors increment */
     const endpoint = isOwner
       ? 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews'
       : 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up';
@@ -892,12 +891,14 @@ async function updateVisitCounter() {
     const count = (data.count || data.value || 1) + COUNTER_OFFSET;
     counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
-    /* Keep the fallback already shown */
+    counterEl.textContent = '—';
   }
 }
 
-/* Only fire the live API if cookies were accepted */
-if (localStorage.getItem('cookieConsent') === 'accepted') {
+/* Owners always get the live count; visitors need consent */
+if (isOwner) {
+  updateVisitCounter();
+} else if (localStorage.getItem('cookieConsent') === 'accepted') {
   updateVisitCounter();
 }
 
@@ -921,13 +922,7 @@ function toggleArchive(h4) {
 }
 
 /* ─── COOKIE CONSENT ─────────────────────────────────────────── */
-(function() {
-  const consent = localStorage.getItem('cookieConsent');
-  if (!consent) {
-    /* No decision yet — show banner */
-    document.getElementById('cookie-banner').style.display = 'flex';
-  }
-})();
+/* Banner is visible by default (CSS); hidden early in <head> if consent already stored */
 
 function acceptCookies() {
   localStorage.setItem('cookieConsent', 'accepted');
@@ -964,7 +959,7 @@ function resetCookieConsent() {
 </div>
 
 <!-- COOKIE BANNER -->
-<div id="cookie-banner" style="display:none;" role="dialog" aria-label="Cookie consent">
+<div id="cookie-banner" role="dialog" aria-label="Cookie consent">
   <p>
     We use a single anonymous cookie to count page visits — no personal data is collected or shared.
     If you decline, no cookie will be set and the visit counter will be disabled.
