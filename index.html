@@ -616,18 +616,21 @@
   <div class="news-grid">
 
     <div class="news-card">
-      <div class="news-card-img" onclick="openLightbox('News_picture/MartaPoster1_astrocytecafe26.jpg')">
-        <img src="News_picture/MartaPoster1_astrocytecafe26.jpg" alt="Marta presenting her poster at Astrocyte Café 2026">
-        <span class="news-card-zoom">🔍</span>
+      <div class="news-card-img" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;cursor:default;">
+        <div style="position:relative;overflow:hidden;cursor:zoom-in;height:180px;" onclick="openLightbox('News_picture/MartaPoster1_astrocytecafe26.jpg')">
+          <img src="News_picture/MartaPoster1_astrocytecafe26.jpg" alt="Marta at Astrocyte Café 2026 — photo 1" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <span class="news-card-zoom" style="opacity:1;">🔍</span>
+        </div>
+        <div style="position:relative;overflow:hidden;cursor:zoom-in;height:180px;" onclick="openLightbox('News_picture/MartaPoster2_astrocytecafe26.jpg')">
+          <img src="News_picture/MartaPoster2_astrocytecafe26.jpg" alt="Marta at Astrocyte Café 2026 — photo 2" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <span class="news-card-zoom" style="opacity:1;">🔍</span>
+        </div>
       </div>
       <div class="news-card-body">
         <div class="news-card-date">June 2026</div>
         <span class="news-type event">Event</span>
         <h4>Marta presents at the Astrocyte Café 2026 in Pamplona</h4>
-        <p>Marta González Martín travelled to Pamplona to present her PhD work at the <strong>Astrocyte Café 2026</strong>, a meeting dedicated to the latest advances in astrocyte biology. She did a fantastic job representing the lab — congrats Marta!
-          <br><br>
-          <span style="cursor:pointer;color:var(--teal-mid);font-size:0.82rem;font-weight:500;" onclick="event.stopPropagation();openLightbox('News_picture/MartaPoster2_astrocytecafe26.jpg')">📷 View second photo →</span>
-        </p>
+        <p>Marta González Martín travelled to Pamplona to present her PhD work at the <strong>Astrocyte Café 2026</strong>, a meeting dedicated to the latest advances in astrocyte biology. She did a fantastic job representing the lab — congrats Marta!</p>
       </div>
     </div>
 
@@ -777,6 +780,7 @@
     <a href="mailto:francesco.ulloa@cajal.csic.es">Contact</a>
     <a href="#people">Team</a>
     <a href="#resources">Resources</a>
+    <a href="#" onclick="resetCookieConsent();return false;">Cookie settings</a>
   </div>
 </footer>
 
@@ -859,10 +863,15 @@ fetchScholar();
 
 /* ─── VISITOR COUNTER ────────────────────────────────────────────
    Uses CounterAPI.dev (free, no account needed).
-   Only runs if the user has accepted cookies.
+   Fallback value always shown immediately.
+   The live API call (which increments) only fires on consent.
    An offset of 62 is added so the display starts at 63.          */
 const COUNTER_OFFSET = 62;
+const FALLBACK_COUNT  = COUNTER_OFFSET + 1;
 const counterEl = document.getElementById('visit-count');
+
+/* Show fallback immediately so there's always a number */
+counterEl.textContent = FALLBACK_COUNT;
 
 /* Set owner flag if URL hash is #owner (visit once to activate) */
 if (window.location.hash === '#owner') {
@@ -883,11 +892,11 @@ async function updateVisitCounter() {
     const count = (data.count || data.value || 1) + COUNTER_OFFSET;
     counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
-    counterEl.textContent = '—';
+    /* Keep the fallback already shown */
   }
 }
 
-/* Only fire the counter if cookies were accepted */
+/* Only fire the live API if cookies were accepted */
 if (localStorage.getItem('cookieConsent') === 'accepted') {
   updateVisitCounter();
 }
@@ -938,6 +947,13 @@ function rejectCookies() {
 function toggleCookieInfo() {
   const info = document.getElementById('cookie-info');
   info.style.display = info.style.display === 'none' ? 'block' : 'none';
+}
+
+function resetCookieConsent() {
+  localStorage.removeItem('cookieConsent');
+  document.getElementById('cookie-banner').style.display = 'flex';
+  document.getElementById('cookie-info').style.display = 'none';
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 </script>
 
