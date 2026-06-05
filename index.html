@@ -798,18 +798,15 @@
   document.getElementById('stat-members').textContent = total;
 })();
 
-/* ─── GOOGLE SCHOLAR STATS ───────────────────────────────────────
-   Google Scholar blocks direct browser requests (CORS + robots).
-   We try two public CORS proxies; if both fail we fall back to
-   the last-known values (802 citations, scraped May 2025).
-   To keep numbers fresh without a server you can:
-     1) Update FALLBACK_* below whenever you check your Scholar page.
-     2) Set up a small GitHub Action / serverless function that writes
-        a scholar.json to your repo nightly — then fetch that instead. */
+/* ─── PUBLICATION & CITATION STATS via OpenAlex ─────────────────
+   OpenAlex is a free, open academic database with a proper JSON API
+   and full CORS support — no scraping, no proxy, always up to date.
+   It finds the author via ORCID, so it's always the right person.
+   Falls back to last-known values if the API is unreachable.        */
 
-const SCHOLAR_URL  = 'https://scholar.google.com/citations?user=cm5Sfs0AAAAJ&hl=en';
-const FALLBACK_CIT = 802;   // ← update when you check Scholar
-const FALLBACK_PUB = '15+'; // ← update when you check Scholar
+const OPENALEX_URL = 'https://api.openalex.org/authors?filter=orcid:0000-0003-3725-9713&mailto=francesco.ulloa@cajal.csic.es';
+const FALLBACK_CIT = 992;   // ← update manually if needed as a last resort
+const FALLBACK_PUB = 10;    // ← update manually if needed as a last resort
 
 const elCit    = document.getElementById('stat-citations');
 const elPub    = document.getElementById('stat-publications');
@@ -817,41 +814,34 @@ const elCitSrc = document.getElementById('stat-cit-source');
 const elPubSrc = document.getElementById('stat-pub-source');
 
 function applyFallback() {
-  elCit.textContent    = FALLBACK_CIT;
+  elCit.textContent    = FALLBACK_CIT.toLocaleString();
   elPub.textContent    = FALLBACK_PUB;
   elCitSrc.textContent = 'last known';
   elPubSrc.textContent = 'last known';
 }
 
 async function fetchScholar() {
-  /* allorigins proxies Google Scholar HTML so we can parse it client-side */
-  const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCHOLAR_URL);
   try {
-    const res  = await fetch(proxyUrl, { signal: AbortSignal.timeout(7000) });
-    if (!res.ok) throw new Error('proxy error');
+    const res  = await fetch(OPENALEX_URL, { signal: AbortSignal.timeout(7000) });
+    if (!res.ok) throw new Error('openalex error');
     const json = await res.json();
-    const html = json.contents || '';
+    const author = json.results && json.results[0];
+    if (!author) throw new Error('no author found');
 
-    /* Citations: Scholar puts total citations in a td with id="gsc_rsb_st" table */
-    const citMatch = html.match(/Cited by[\s\S]*?<td[^>]*>(\d[\d,]*)<\/td>/i) ||
-                     html.match(/>(\d[\d,]+)<\/td>[\s\S]{0,200}All/);
-    /* Publications: count rows with class gsc_a_tr */
-    const pubMatches = (html.match(/gsc_a_tr/g) || []).length;
+    const cited = author.cited_by_count;
+    const pubs  = author.works_count;
 
-    let cited = citMatch ? parseInt(citMatch[1].replace(/,/g,''), 10) : null;
-    let pubs  = pubMatches || null;
-
-    if (cited && cited > 0) {
+    if (cited > 0) {
       elCit.textContent    = cited.toLocaleString();
-      elCitSrc.textContent = 'Google Scholar';
+      elCitSrc.textContent = 'OpenAlex';
     } else {
-      elCit.textContent    = FALLBACK_CIT;
+      elCit.textContent    = FALLBACK_CIT.toLocaleString();
       elCitSrc.textContent = 'last known';
     }
 
-    if (pubs && pubs > 0) {
+    if (pubs > 0) {
       elPub.textContent    = pubs;
-      elPubSrc.textContent = 'Google Scholar';
+      elPubSrc.textContent = 'OpenAlex';
     } else {
       elPub.textContent    = FALLBACK_PUB;
       elPubSrc.textContent = 'last known';
