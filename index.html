@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ulloa-Severino Lab | Neuroscience Research</title>
-<!-- Hide cookie banner immediately if consent already given — must run before first paint -->
-<script>if(localStorage.getItem('cookieConsent')){document.write('<style>#cookie-banner{display:none!important}</style>');}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -216,18 +214,14 @@
   #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
   #lightbox-close { position: fixed; top: 1.25rem; right: 1.5rem; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; font-weight: 300; }
 
-  /* COOKIE BANNER */
-  #cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy-mid); border-top: 1px solid rgba(255,255,255,0.08); padding: 1rem 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; z-index: 500; flex-wrap: wrap; }
-  #cookie-banner p { color: rgba(255,255,255,0.7); font-size: 0.82rem; line-height: 1.5; flex: 1; min-width: 200px; }
-  #cookie-banner a { color: #5DCAA5; }
-  .cookie-btns { display: flex; gap: 0.75rem; flex-shrink: 0; }
-  .cookie-btn { padding: 0.45rem 1.1rem; border-radius: 4px; font-size: 0.82rem; cursor: pointer; font-weight: 500; border: none; }
-  .cookie-accept { background: var(--teal); color: #fff; }
-  .cookie-reject { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.25) !important; }
-  @media (max-width: 768px) {
-    #cookie-banner { padding: 1rem 1.25rem; }
-    #cookie-info { bottom: 8rem; }
-  }
+
+  /* REACTIONS */
+  .news-reactions { display: flex; gap: 0.5rem; padding: 0.65rem 1.25rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .reaction-btn { display: flex; align-items: center; gap: 0.35rem; background: none; border: 1px solid var(--border); border-radius: 2rem; padding: 0.28rem 0.75rem; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.1s; font-family: inherit; }
+  .reaction-btn:hover { border-color: var(--teal); color: var(--teal-mid); background: var(--teal-light); }
+  .reaction-btn.reacted { border-color: var(--teal); color: var(--teal-mid); background: var(--teal-light); font-weight: 500; }
+  .reaction-emoji { font-size: 0.95rem; line-height: 1; }
+  .reaction-count { min-width: 1ch; }
 
   /* RESOURCES */
   #resources { background: #fff; }
@@ -669,6 +663,11 @@
         <h4>Prof. Cagla Eroglu visits the CNC and our lab</h4>
         <p>We had the immense pleasure of welcoming <strong>Prof. Cagla Eroglu</strong> (Duke University) to the Cajal Neuroscience Center! Cagla is a world-leading scientist in astrocyte biology and a wonderful mentor — her visit was an inspiring reminder of why we love this science. We are deeply grateful for her time, her enthusiasm, and for continuing to be such a guiding presence for our lab.</p>
       </div>
+      <div class="news-reactions" data-news-id="cagla-visit-jun26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+      </div>
     </div>
 
     <div class="news-card">
@@ -681,6 +680,11 @@
         <span class="news-type announcement">Announcement</span>
         <h4>Welcome Francesca Maddalena Postogna!</h4>
         <p>We are delighted to welcome Francesca Maddalena Postogna, a PhD student from the University of Milan in the lab of Prof. Angelisa Frasca. Francesca will be staying with us until October to study how astrocyte morphology is affected in Rett's syndrome. Welcome, Francesca!</p>
+      </div>
+      <div class="news-reactions" data-news-id="francesca-welcome-jun26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
       </div>
     </div>
 
@@ -701,6 +705,11 @@
         <h4>Marta presents at the Astrocyte Café 2026 in Pamplona</h4>
         <p>Marta González Martín travelled to Pamplona to present her PhD work at the <strong>Astrocyte Café 2026</strong>, a meeting dedicated to the latest advances in astrocyte biology. She did a fantastic job representing the lab — congrats Marta!</p>
       </div>
+      <div class="news-reactions" data-news-id="marta-astrocafe-jun26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+      </div>
     </div>
 
     <div class="news-card">
@@ -713,6 +722,11 @@
         <span class="news-type event">Event</span>
         <h4>Lab lunch with the Arévalo Lab</h4>
         <p>Our lab and the Arévalo Lab went out for lunch to say goodbye to Ivan, a visiting student from Argentina who spent 3 months with us. It was a wonderful time together — we wish Ivan all the best in his next adventures!</p>
+      </div>
+      <div class="news-reactions" data-news-id="lab-lunch-may26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
       </div>
     </div>
 
@@ -849,11 +863,19 @@
     <a href="mailto:francesco.ulloa@cajal.csic.es">Contact</a>
     <a href="#people">Team</a>
     <a href="#resources">Resources</a>
-    <a href="#" onclick="resetCookieConsent();return false;">Cookie settings</a>
   </div>
 </footer>
 
 <script>
+/* AbortSignal.timeout polyfill for Firefox < 106 */
+if (!AbortSignal.timeout) {
+  AbortSignal.timeout = function(ms) {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), ms);
+    return ctrl.signal;
+  };
+}
+
 /* ─── TEAM MEMBER COUNT ───────────────────────────────────────────
    Counts .person-card elements inside #people-grid,
    excluding the "Join the Lab" recruiting card (#join-card).
@@ -971,13 +993,12 @@ const isOwner = localStorage.getItem('isOwner') === '1';
 
 async function updateVisitCounter() {
   try {
-    /* Owners read without incrementing; visitors increment */
     const endpoint = isOwner
       ? 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews'
       : 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up';
-    const res = await fetch(endpoint, { signal: AbortSignal.timeout(5000) });
+    const res = await fetchWithTimeout(endpoint, 5000);
     if (!res.ok) throw new Error();
-    const data = await res.json();
+    const data  = await res.json();
     const count = (data.count || data.value || 1) + COUNTER_OFFSET;
     counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
@@ -985,12 +1006,8 @@ async function updateVisitCounter() {
   }
 }
 
-/* Owners always get the live count; visitors need consent */
-if (isOwner) {
-  updateVisitCounter();
-} else if (localStorage.getItem('cookieConsent') === 'accepted') {
-  updateVisitCounter();
-}
+/* Always fire — no personal data collected */
+updateVisitCounter();
 
 /* ─── LIGHTBOX ───────────────────────────────────────────────── */
 function openLightbox(src) {
@@ -1011,35 +1028,65 @@ function toggleArchive(h4) {
   h4.classList.toggle('open', !isOpen);
 }
 
-/* ─── COOKIE CONSENT ─────────────────────────────────────────── */
-/* Banner is visible by default (CSS); hidden early in <head> if consent already stored */
 
-function acceptCookies() {
-  localStorage.setItem('cookieConsent', 'accepted');
-  document.getElementById('cookie-banner').style.display = 'none';
-  /* Start the visit counter now that the user consented */
-  updateVisitCounter();
+
+/* ─── NEWS REACTIONS ─────────────────────────────────────────────
+   Counts stored in CounterAPI under namespace "ulloaseverinolab".
+   One counter per news-id × reaction type.
+   LocalStorage prevents the same browser voting twice.            */
+const RXN_NS = 'ulloaseverinolab';
+
+function rxnStorageKey(newsId, reaction) {
+  return `rxn-${newsId}-${reaction}`;
 }
 
-function rejectCookies() {
-  localStorage.setItem('cookieConsent', 'rejected');
-  document.getElementById('cookie-banner').style.display = 'none';
-  document.getElementById('cookie-info').style.display = 'none';
-  /* Counter stays silent; show a dash */
-  counterEl.textContent = '—';
+async function loadReactions(container) {
+  const newsId = container.dataset.newsId;
+  for (const btn of container.querySelectorAll('.reaction-btn')) {
+    const reaction  = btn.dataset.reaction;
+    const countEl   = btn.querySelector('.reaction-count');
+    /* Mark already-reacted buttons */
+    if (localStorage.getItem(rxnStorageKey(newsId, reaction)) === '1') {
+      btn.classList.add('reacted');
+    }
+    /* Fetch current count */
+    try {
+      const res  = await fetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, { signal: AbortSignal.timeout(5000) });
+      const data = res.ok ? await res.json() : {};
+      countEl.textContent = (data.count ?? data.value ?? 0);
+    } catch {
+      countEl.textContent = '0';
+    }
+  }
 }
 
-function toggleCookieInfo() {
-  const info = document.getElementById('cookie-info');
-  info.style.display = info.style.display === 'none' ? 'block' : 'none';
+async function handleReaction(btn) {
+  if (btn.classList.contains('reacted')) return; /* already voted */
+  const container = btn.closest('.news-reactions');
+  const newsId    = container.dataset.newsId;
+  const reaction  = btn.dataset.reaction;
+  const countEl   = btn.querySelector('.reaction-count');
+
+  /* Optimistic UI */
+  btn.classList.add('reacted');
+  btn.style.transform = 'scale(1.25)';
+  setTimeout(() => { btn.style.transform = ''; }, 150);
+  localStorage.setItem(rxnStorageKey(newsId, reaction), '1');
+
+  /* Increment counter */
+  try {
+    const res  = await fetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, { signal: AbortSignal.timeout(5000) });
+    const data = res.ok ? await res.json() : {};
+    countEl.textContent = (data.count ?? data.value ?? (parseInt(countEl.textContent) || 0) + 1);
+  } catch {
+    countEl.textContent = (parseInt(countEl.textContent) || 0) + 1;
+  }
 }
 
-function resetCookieConsent() {
-  localStorage.removeItem('cookieConsent');
-  document.getElementById('cookie-banner').style.display = 'flex';
-  document.getElementById('cookie-info').style.display = 'none';
-  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-}
+/* Load counts for all reaction bars on the page */
+document.querySelectorAll('.news-reactions').forEach(loadReactions);
+
+
 </script>
 
 <!-- LIGHTBOX -->
@@ -1048,26 +1095,6 @@ function resetCookieConsent() {
   <img id="lightbox-img" src="" alt="Full view">
 </div>
 
-<!-- COOKIE BANNER -->
-<div id="cookie-banner" role="dialog" aria-label="Cookie consent">
-  <p>
-    We use a single anonymous cookie to count page visits — no personal data is collected or shared.
-    If you decline, no cookie will be set and the visit counter will be disabled.
-    <button onclick="toggleCookieInfo()" style="background:none;border:none;color:#5DCAA5;font-size:0.82rem;cursor:pointer;padding:0;text-decoration:underline;">Learn more</button>
-  </p>
-  <div class="cookie-btns">
-    <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
-    <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Decline</button>
-  </div>
-</div>
-<!-- Cookie info tooltip -->
-<div id="cookie-info" style="display:none;position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);max-width:480px;width:90%;background:#132040;border:1px solid rgba(93,202,165,0.25);border-radius:8px;padding:1.25rem 1.5rem;z-index:501;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
-  <p style="color:rgba(255,255,255,0.8);font-size:0.82rem;line-height:1.7;margin:0 0 0.75rem;">
-    <strong style="color:#fff;">What we use cookies for</strong><br>
-    We use <a href="https://counterapi.dev" target="_blank" rel="noopener" style="color:#5DCAA5;">CounterAPI</a> to count the number of times this page is visited. This sets a single, anonymous counter — no identifiers, no tracking across sites, no third-party advertising. No personal data is collected or transmitted.
-  </p>
-  <button onclick="toggleCookieInfo()" style="background:none;border:1px solid rgba(93,202,165,0.3);color:#5DCAA5;font-size:0.78rem;padding:0.3rem 0.85rem;border-radius:2rem;cursor:pointer;">Close</button>
-</div>
 
 </body>
 </html>
