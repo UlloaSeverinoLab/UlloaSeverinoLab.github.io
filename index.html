@@ -215,13 +215,21 @@
   #lightbox-close { position: fixed; top: 1.25rem; right: 1.5rem; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; font-weight: 300; }
 
 
-  /* REACTIONS */
-  .news-reactions { display: flex; gap: 0.5rem; padding: 0.65rem 1.25rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  /* REACTIONS & SHARE */
+  .news-reactions { display: flex; gap: 0.5rem; padding: 0.65rem 1.25rem; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
   .reaction-btn { display: flex; align-items: center; gap: 0.35rem; background: none; border: 1px solid var(--border); border-radius: 2rem; padding: 0.28rem 0.75rem; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.1s; font-family: inherit; }
   .reaction-btn:hover { border-color: var(--teal); color: var(--teal-mid); background: var(--teal-light); }
   .reaction-btn.reacted { border-color: var(--teal); color: var(--teal-mid); background: var(--teal-light); font-weight: 500; }
   .reaction-emoji { font-size: 0.95rem; line-height: 1; }
   .reaction-count { min-width: 1ch; }
+  .share-btn { margin-left: auto; display: flex; align-items: center; gap: 0.35rem; background: none; border: none; cursor: pointer; font-size: 0.78rem; color: var(--text-muted); padding: 0.28rem 0.5rem; border-radius: 4px; font-family: inherit; transition: color 0.15s; position: relative; }
+  .share-btn:hover { color: var(--teal-mid); }
+  .share-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .share-toast { position: absolute; bottom: calc(100% + 6px); right: 0; background: var(--navy); color: #fff; font-size: 0.72rem; padding: 0.3rem 0.65rem; border-radius: 4px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .share-toast.show { opacity: 1; }
+  /* Highlight card when linked directly */
+  @keyframes news-highlight { 0%,100%{box-shadow:none} 20%{box-shadow:0 0 0 3px var(--teal)} }
+  .news-card.linked { animation: news-highlight 2s ease; }
 
   /* RESOURCES */
   #resources { background: #fff; }
@@ -638,7 +646,7 @@
        move the oldest one to the archive list below.               -->
   <div class="news-grid">
 
-    <div class="news-card">
+    <div class="news-card" id="news-cagla-visit-jun26">
       <div class="news-card-img" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;cursor:default;">
         <div style="position:relative;overflow:hidden;cursor:zoom-in;height:130px;" onclick="openLightbox('News_picture/VisitCagla2026/IMG_9216.jpg')">
           <img src="News_picture/VisitCagla2026/IMG_9216.jpg" alt="Cagla Eroglu visit — 1" style="width:100%;height:100%;object-fit:cover;display:block;">
@@ -664,13 +672,18 @@
         <p>We had the immense pleasure of welcoming <strong>Prof. Cagla Eroglu</strong> (Duke University) to the Cajal Neuroscience Center! Cagla is a world-leading scientist in astrocyte biology and a wonderful mentor — her visit was an inspiring reminder of why we love this science. We are deeply grateful for her time, her enthusiasm, and for continuing to be such a guiding presence for our lab.</p>
       </div>
       <div class="news-reactions" data-news-id="cagla-visit-jun26">
-        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
       </div>
     </div>
 
-    <div class="news-card">
+    <div class="news-card" id="news-francesca-welcome-jun26">
       <div class="news-card-img" onclick="openLightbox('News_picture/Francesca_Postogna2026.jpg')">
         <img src="News_picture/Francesca_Postogna2026.jpg" alt="Francesca Maddalena Postogna">
         <span class="news-card-zoom">🔍</span>
@@ -682,13 +695,18 @@
         <p>We are delighted to welcome Francesca Maddalena Postogna, a PhD student from the University of Milan in the lab of Prof. Angelisa Frasca. Francesca will be staying with us until October to study how astrocyte morphology is affected in Rett's syndrome. Welcome, Francesca!</p>
       </div>
       <div class="news-reactions" data-news-id="francesca-welcome-jun26">
-        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
       </div>
     </div>
 
-    <div class="news-card">
+    <div class="news-card" id="news-marta-astrocafe-jun26">
       <div class="news-card-img" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;cursor:default;">
         <div style="position:relative;overflow:hidden;cursor:zoom-in;height:180px;" onclick="openLightbox('News_picture/MartaPoster1_astrocytecafe26.jpg')">
           <img src="News_picture/MartaPoster1_astrocytecafe26.jpg" alt="Marta at Astrocyte Café 2026 — photo 1" style="width:100%;height:100%;object-fit:cover;display:block;">
@@ -706,13 +724,18 @@
         <p>Marta González Martín travelled to Pamplona to present her PhD work at the <strong>Astrocyte Café 2026</strong>, a meeting dedicated to the latest advances in astrocyte biology. She did a fantastic job representing the lab — congrats Marta!</p>
       </div>
       <div class="news-reactions" data-news-id="marta-astrocafe-jun26">
-        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
       </div>
     </div>
 
-    <div class="news-card">
+    <div class="news-card" id="news-lab-lunch-may26">
       <div class="news-card-img" onclick="openLightbox('News_picture/Lablunch_May26.jpg')">
         <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2026">
         <span class="news-card-zoom">🔍</span>
@@ -724,9 +747,14 @@
         <p>Our lab and the Arévalo Lab went out for lunch to say goodbye to Ivan, a visiting student from Argentina who spent 3 months with us. It was a wonderful time together — we wish Ivan all the best in his next adventures!</p>
       </div>
       <div class="news-reactions" data-news-id="lab-lunch-may26">
-        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">…</span></button>
-        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">…</span></button>
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
       </div>
     </div>
 
@@ -867,13 +895,12 @@
 </footer>
 
 <script>
-/* AbortSignal.timeout polyfill for Firefox < 106 */
-if (!AbortSignal.timeout) {
-  AbortSignal.timeout = function(ms) {
-    const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), ms);
-    return ctrl.signal;
-  };
+/* Cross-browser fetch with timeout using plain AbortController */
+function tFetch(url, opts, ms) {
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms || 7000);
+  return fetch(url, Object.assign({}, opts, { signal: ctrl.signal }))
+    .finally(() => clearTimeout(timer));
 }
 
 /* ─── TEAM MEMBER COUNT ───────────────────────────────────────────
@@ -907,10 +934,8 @@ const elPubSrc = document.getElementById('stat-pub-source');
 /* ── Publications from ORCID ── */
 async function fetchPubs() {
   try {
-    const res  = await fetch(`https://pub.orcid.org/v3.0/${ORCID}/works`, {
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(7000)
-    });
+    const res  = await tFetch(`https://pub.orcid.org/v3.0/${ORCID}/works`,
+      { headers: { Accept: 'application/json' } }, 7000);
     if (!res.ok) throw new Error();
     const data  = await res.json();
     const count = (data.group || []).length;
@@ -934,7 +959,7 @@ function normaliseTitle(t) {
 async function fetchCitations() {
   try {
     /* Resolve OpenAlex author ID via ORCID */
-    const aRes  = await fetch(`https://api.openalex.org/authors?filter=orcid:${ORCID}&${OA_MAILTO}`, { signal: AbortSignal.timeout(7000) });
+    const aRes  = await tFetch(`https://api.openalex.org/authors?filter=orcid:${ORCID}&${OA_MAILTO}`, {}, 7000);
     if (!aRes.ok) throw new Error();
     const aJson = await aRes.json();
     const author = aJson.results && aJson.results[0];
@@ -942,7 +967,7 @@ async function fetchCitations() {
     const authorId = author.id.replace('https://openalex.org/', '');
 
     /* Fetch all works */
-    const wRes  = await fetch(`https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type&${OA_MAILTO}`, { signal: AbortSignal.timeout(10000) });
+    const wRes  = await tFetch(`https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type&${OA_MAILTO}`, {}, 10000);
     if (!wRes.ok) throw new Error();
     const works = (await wRes.json()).results || [];
 
@@ -996,10 +1021,10 @@ async function updateVisitCounter() {
     const endpoint = isOwner
       ? 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews'
       : 'https://api.counterapi.dev/v1/ulloaseverinolab/pageviews/up';
-    const res = await fetchWithTimeout(endpoint, 5000);
+    const res = await tFetch(endpoint, {}, 6000);
     if (!res.ok) throw new Error();
     const data  = await res.json();
-    const count = (data.count || data.value || 1) + COUNTER_OFFSET;
+    const count = (data.count ?? data.value ?? 0) + COUNTER_OFFSET;
     counterEl.textContent = count.toLocaleString() + (isOwner ? ' 👤' : '');
   } catch {
     counterEl.textContent = '—';
@@ -1040,24 +1065,27 @@ function rxnStorageKey(newsId, reaction) {
   return `rxn-${newsId}-${reaction}`;
 }
 
-async function loadReactions(container) {
+function loadReactions(container) {
   const newsId = container.dataset.newsId;
-  for (const btn of container.querySelectorAll('.reaction-btn')) {
-    const reaction  = btn.dataset.reaction;
-    const countEl   = btn.querySelector('.reaction-count');
-    /* Mark already-reacted buttons */
-    if (localStorage.getItem(rxnStorageKey(newsId, reaction)) === '1') {
+  const btns   = Array.from(container.querySelectorAll('.reaction-btn'));
+
+  /* Initialise UI immediately — mark reacted, start count at 0 */
+  btns.forEach(btn => {
+    btn.querySelector('.reaction-count').textContent = '0';
+    if (localStorage.getItem(rxnStorageKey(newsId, btn.dataset.reaction)) === '1') {
       btn.classList.add('reacted');
     }
-    /* Fetch current count */
-    try {
-      const res  = await fetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, { signal: AbortSignal.timeout(5000) });
-      const data = res.ok ? await res.json() : {};
-      countEl.textContent = (data.count ?? data.value ?? 0);
-    } catch {
-      countEl.textContent = '0';
-    }
-  }
+  });
+
+  /* Fetch all counts for this card in parallel */
+  Promise.allSettled(btns.map(btn => {
+    const reaction = btn.dataset.reaction;
+    const countEl  = btn.querySelector('.reaction-count');
+    return tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 6000)
+      .then(res => res.ok ? res.json() : {})
+      .then(data => { countEl.textContent = (data.count ?? data.value ?? 0); })
+      .catch(() => {}); /* keep 0 on error */
+  }));
 }
 
 async function handleReaction(btn) {
@@ -1075,7 +1103,7 @@ async function handleReaction(btn) {
 
   /* Increment counter */
   try {
-    const res  = await fetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, { signal: AbortSignal.timeout(5000) });
+    const res  = await tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, {}, 6000);
     const data = res.ok ? await res.json() : {};
     countEl.textContent = (data.count ?? data.value ?? (parseInt(countEl.textContent) || 0) + 1);
   } catch {
@@ -1085,6 +1113,36 @@ async function handleReaction(btn) {
 
 /* Load counts for all reaction bars on the page */
 document.querySelectorAll('.news-reactions').forEach(loadReactions);
+
+/* ─── NEWS SHARE ─────────────────────────────────────────────────
+   Copies a direct anchor URL to the clipboard.
+   Shows a brief "Link copied!" toast on the button.
+   On page load, scrolls to and highlights the linked card.        */
+function shareNews(btn) {
+  const card    = btn.closest('.news-card');
+  const url     = window.location.origin + window.location.pathname + '#' + card.id;
+  const toast   = btn.querySelector('.share-toast');
+  navigator.clipboard.writeText(url).then(() => {
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }).catch(() => {
+    /* Fallback for browsers without clipboard API */
+    prompt('Copy this link:', url);
+  });
+}
+
+/* Scroll to and highlight a news card if the URL has a matching hash */
+(function highlightLinkedNews() {
+  const hash = window.location.hash.slice(1);
+  if (!hash.startsWith('news-')) return;
+  const card = document.getElementById(hash);
+  if (!card) return;
+  setTimeout(() => {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('linked');
+    card.addEventListener('animationend', () => card.classList.remove('linked'), { once: true });
+  }, 400);
+})();
 
 
 </script>
