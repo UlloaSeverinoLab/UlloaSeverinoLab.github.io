@@ -1068,71 +1068,58 @@ function rxnCountKey(newsId, reaction) {
   return `rxn-count-${newsId}-${reaction}`;
 }
 
-function loadReactions(container) {
-  const newsId = container.dataset.newsId;
-  const btns   = Array.from(container.querySelectorAll('.reaction-btn'));
-
-  /* Show cached counts immediately (survive a failed API fetch on reload) */
-  btns.forEach(btn => {
-    const reaction = btn.dataset.reaction;
-    const cached   = localStorage.getItem(rxnCountKey(newsId, reaction));
-    btn.querySelector('.reaction-count').textContent = cached !== null ? cached : '0';
-    if (localStorage.getItem(rxnStorageKey(newsId, reaction)) === '1') {
-      btn.classList.add('reacted');
-    }
-  });
-
-  /* Stagger fetches slightly to avoid triggering rate limits (30 req/min) */
-  btns.forEach((btn, i) => {
-    const reaction = btn.dataset.reaction;
-    const countEl  = btn.querySelector('.reaction-count');
-    setTimeout(() => {
-      tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 8000)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (!data) return;
-          const n = data.count ?? data.value;
-          if (n == null) return;
-          countEl.textContent = n;
-          localStorage.setItem(rxnCountKey(newsId, reaction), n);
-        })
-        .catch(() => {}); /* keep cached value on error */
-    }, i * 250); /* 250 ms between each request */
+function initReactionUI() {
+  /* Immediately render cached counts + reacted state from localStorage */
+  document.querySelectorAll('.news-reactions').forEach(container => {
+    const newsId = container.dataset.newsId;
+    container.querySelectorAll('.reaction-btn').forEach(btn => {
+      const reaction = btn.dataset.reaction;
+      const cached   = localStorage.getItem(rxnCountKey(newsId, reaction));
+      btn.querySelector('.reaction-count').textContent = cached !== null ? cached : '0';
+      if (localStorage.getItem(rxnStorageKey(newsId, reaction)) === '1') {
+        btn.classList.add('reacted');
+      }
+    });
   });
 }
 
-async function handleReaction(btn) {
-  if (btn.classList.contains('reacted')) return; /* already voted */
-  const container = btn.closest('.news-reactions');
-  const newsId    = container.dataset.newsId;
-  const reaction  = btn.dataset.reaction;
-  const countEl   = btn.querySelector('.reaction-count');
+async function fetchAllReactionCounts() {
+  /* Build a flat list of every (newsId, reaction, countEl) triplet */
+  const jobs = [];
+  document.querySelectorAll('.news-reactions').forEach(container => {
+    const newsId = container.dataset.newsId;
+    container.querySelectorAll('.reaction-btn').forEach(btn => {
+      jobs.push({ newsId, reaction: btn.dataset.reaction,
+                  countEl: btn.querySelector('.reaction-count') });
+    });
+  });
 
-  /* Optimistic UI: show +1 immediately */
-  const optimistic = (parseInt(countEl.textContent) || 0) + 1;
-  btn.classList.add('reacted');
-  btn.style.transform = 'scale(1.25)';
-  setTimeout(() => { btn.style.transform = ''; }, 150);
-  countEl.textContent = optimistic;
-  localStorage.setItem(rxnStorageKey(newsId, reaction), '1');
-  localStorage.setItem(rxnCountKey(newsId, reaction), optimistic);
-
-  /* Confirm with API and sync actual count */
-  try {
-    const res  = await tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, {}, 8000);
-    const data = res.ok ? await res.json() : null;
-    if (data) {
-      const n = data.count ?? data.value ?? optimistic;
-      countEl.textContent = n;
-      localStorage.setItem(rxnCountKey(newsId, reaction), n);
+  /* Sequential requests with a gap — avoids rate-limit bursts */
+  for (const { newsId, reaction, countEl } of jobs) {
+    try {
+      const res = await tFetch(
+        `https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 8000);
+      if (res.ok) {
+        const data = await res.json();
+        const n    = data.count ?? data.value;
+        if (n != null) {
+          countEl.textContent = n;
+          localStorage.setItem(rxnCountKey(newsId, reaction), n);
+        }
+      } else {
+        console.warn(`[reactions] ${newsId}-${reaction} → HTTP ${res.status}`);
+      }
+    } catch(e) {
+      console.warn(`[reactions] ${newsId}-${reaction} error:`, e.message);
     }
-  } catch {
-    /* keep optimistic count — already saved to localStorage */
+    /* 350 ms gap keeps all 12 requests well under the 30 req/min limit */
+    await new Promise(r => setTimeout(r, 350));
   }
 }
 
-/* Load counts for all reaction bars on the page */
-document.querySelectorAll('.news-reactions').forEach(loadReactions);
+initReactionUI();
+/* Start sequential API refresh 500 ms after page has fully loaded */
+window.addEventListener('load', () => setTimeout(fetchAllReactionCounts, 500));
 
 /* ─── NEWS SHARE ─────────────────────────────────────────────────
    Copies a direct anchor URL to the clipboard.
