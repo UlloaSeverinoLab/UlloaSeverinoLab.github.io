@@ -1064,28 +1064,41 @@ const RXN_NS = 'ulloaseverinolab';
 function rxnStorageKey(newsId, reaction) {
   return `rxn-${newsId}-${reaction}`;
 }
+function rxnCountKey(newsId, reaction) {
+  return `rxn-count-${newsId}-${reaction}`;
+}
 
 function loadReactions(container) {
   const newsId = container.dataset.newsId;
   const btns   = Array.from(container.querySelectorAll('.reaction-btn'));
 
-  /* Initialise UI immediately — mark reacted, start count at 0 */
+  /* Show cached counts immediately (survive a failed API fetch on reload) */
   btns.forEach(btn => {
-    btn.querySelector('.reaction-count').textContent = '0';
-    if (localStorage.getItem(rxnStorageKey(newsId, btn.dataset.reaction)) === '1') {
+    const reaction = btn.dataset.reaction;
+    const cached   = localStorage.getItem(rxnCountKey(newsId, reaction));
+    btn.querySelector('.reaction-count').textContent = cached !== null ? cached : '0';
+    if (localStorage.getItem(rxnStorageKey(newsId, reaction)) === '1') {
       btn.classList.add('reacted');
     }
   });
 
-  /* Fetch all counts for this card in parallel */
-  Promise.allSettled(btns.map(btn => {
+  /* Stagger fetches slightly to avoid triggering rate limits (30 req/min) */
+  btns.forEach((btn, i) => {
     const reaction = btn.dataset.reaction;
     const countEl  = btn.querySelector('.reaction-count');
-    return tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 6000)
-      .then(res => res.ok ? res.json() : {})
-      .then(data => { countEl.textContent = (data.count ?? data.value ?? 0); })
-      .catch(() => {}); /* keep 0 on error */
-  }));
+    setTimeout(() => {
+      tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 8000)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (!data) return;
+          const n = data.count ?? data.value;
+          if (n == null) return;
+          countEl.textContent = n;
+          localStorage.setItem(rxnCountKey(newsId, reaction), n);
+        })
+        .catch(() => {}); /* keep cached value on error */
+    }, i * 250); /* 250 ms between each request */
+  });
 }
 
 async function handleReaction(btn) {
@@ -1095,19 +1108,26 @@ async function handleReaction(btn) {
   const reaction  = btn.dataset.reaction;
   const countEl   = btn.querySelector('.reaction-count');
 
-  /* Optimistic UI */
+  /* Optimistic UI: show +1 immediately */
+  const optimistic = (parseInt(countEl.textContent) || 0) + 1;
   btn.classList.add('reacted');
   btn.style.transform = 'scale(1.25)';
   setTimeout(() => { btn.style.transform = ''; }, 150);
+  countEl.textContent = optimistic;
   localStorage.setItem(rxnStorageKey(newsId, reaction), '1');
+  localStorage.setItem(rxnCountKey(newsId, reaction), optimistic);
 
-  /* Increment counter */
+  /* Confirm with API and sync actual count */
   try {
-    const res  = await tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, {}, 6000);
-    const data = res.ok ? await res.json() : {};
-    countEl.textContent = (data.count ?? data.value ?? (parseInt(countEl.textContent) || 0) + 1);
+    const res  = await tFetch(`https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}/up`, {}, 8000);
+    const data = res.ok ? await res.json() : null;
+    if (data) {
+      const n = data.count ?? data.value ?? optimistic;
+      countEl.textContent = n;
+      localStorage.setItem(rxnCountKey(newsId, reaction), n);
+    }
   } catch {
-    countEl.textContent = (parseInt(countEl.textContent) || 0) + 1;
+    /* keep optimistic count — already saved to localStorage */
   }
 }
 
@@ -1120,7 +1140,8 @@ document.querySelectorAll('.news-reactions').forEach(loadReactions);
    On page load, scrolls to and highlights the linked card.        */
 function shareNews(btn) {
   const card    = btn.closest('.news-card');
-  const url     = window.location.origin + window.location.pathname + '#' + card.id;
+  const newsId  = card.id.replace(/^news-/, '');
+  const url     = 'https://ulloaseverinolab.github.io/news/' + newsId + '.html';
   const toast   = btn.querySelector('.share-toast');
   navigator.clipboard.writeText(url).then(() => {
     toast.classList.add('show');
