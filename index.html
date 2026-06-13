@@ -1084,41 +1084,31 @@ function initReactionUI() {
 }
 
 async function fetchAllReactionCounts() {
-  /* Build a flat list of every (newsId, reaction, countEl) triplet */
-  const jobs = [];
-  document.querySelectorAll('.news-reactions').forEach(container => {
-    const newsId = container.dataset.newsId;
-    container.querySelectorAll('.reaction-btn').forEach(btn => {
-      jobs.push({ newsId, reaction: btn.dataset.reaction,
-                  countEl: btn.querySelector('.reaction-count') });
+  /* Load counts from the repo JSON — updated hourly by GitHub Actions.
+     Raw GitHub content always has CORS headers, so this always works. */
+  const REPO_URL = 'https://raw.githubusercontent.com/UlloaSeverinoLab/UlloaSeverinoLab.github.io/main/data/reactions.json';
+  try {
+    const res  = await tFetch(REPO_URL, {}, 8000);
+    if (!res.ok) return;
+    const data = await res.json();
+    document.querySelectorAll('.news-reactions').forEach(container => {
+      const newsId = container.dataset.newsId;
+      const counts = data[newsId];
+      if (!counts) return;
+      container.querySelectorAll('.reaction-btn').forEach(btn => {
+        const n = counts[btn.dataset.reaction];
+        if (n == null) return;
+        btn.querySelector('.reaction-count').textContent = n;
+        localStorage.setItem(rxnCountKey(newsId, btn.dataset.reaction), n);
+      });
     });
-  });
-
-  /* Sequential requests with a gap — avoids rate-limit bursts */
-  for (const { newsId, reaction, countEl } of jobs) {
-    try {
-      const res = await tFetch(
-        `https://api.counterapi.dev/v1/${RXN_NS}/news-${newsId}-${reaction}`, {}, 8000);
-      if (res.ok) {
-        const data = await res.json();
-        const n    = data.count ?? data.value;
-        if (n != null) {
-          countEl.textContent = n;
-          localStorage.setItem(rxnCountKey(newsId, reaction), n);
-        }
-      } else {
-        console.warn(`[reactions] ${newsId}-${reaction} → HTTP ${res.status}`);
-      }
-    } catch(e) {
-      console.warn(`[reactions] ${newsId}-${reaction} error:`, e.message);
-    }
-    /* 350 ms gap keeps all 12 requests well under the 30 req/min limit */
-    await new Promise(r => setTimeout(r, 350));
+  } catch(e) {
+    console.warn('[reactions] could not load counts:', e.message);
   }
 }
 
 initReactionUI();
-/* Start sequential API refresh 500 ms after page has fully loaded */
+/* Fetch the synced counts from GitHub after page load */
 window.addEventListener('load', () => setTimeout(fetchAllReactionCounts, 500));
 
 async function handleReaction(btn) {
