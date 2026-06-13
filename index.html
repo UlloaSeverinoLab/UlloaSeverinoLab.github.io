@@ -1096,10 +1096,13 @@ async function fetchAllReactionCounts() {
       const counts = data[newsId];
       if (!counts) return;
       container.querySelectorAll('.reaction-btn').forEach(btn => {
-        const n = counts[btn.dataset.reaction];
-        if (n == null) return;
+        const reaction = btn.dataset.reaction;
+        const fromFile = counts[reaction] ?? 0;
+        const cached   = parseInt(localStorage.getItem(rxnCountKey(newsId, reaction))) || 0;
+        /* Never let a stale JSON overwrite a locally-known higher count */
+        const n = Math.max(fromFile, cached);
         btn.querySelector('.reaction-count').textContent = n;
-        localStorage.setItem(rxnCountKey(newsId, btn.dataset.reaction), n);
+        localStorage.setItem(rxnCountKey(newsId, reaction), n);
       });
     });
   } catch(e) {
