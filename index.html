@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <title>Ulloa-Severino Lab | Neuroscience Research</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1132,9 +1133,11 @@ function initReactionUI() {
 async function fetchAllReactionCounts() {
   /* Load counts from the repo JSON — updated hourly by GitHub Actions.
      Raw GitHub content always has CORS headers, so this always works. */
-  const REPO_URL = 'https://raw.githubusercontent.com/UlloaSeverinoLab/UlloaSeverinoLab.github.io/main/data/reactions.json';
+  /* Cache-bust: changes every 5 min so CDN serves a fresh copy each time */
+  const cacheBust = Math.floor(Date.now() / 300000);
+  const REPO_URL = `https://raw.githubusercontent.com/UlloaSeverinoLab/UlloaSeverinoLab.github.io/main/data/reactions.json?t=${cacheBust}`;
   try {
-    const res  = await tFetch(REPO_URL, {}, 8000);
+    const res  = await tFetch(REPO_URL, { cache: 'no-store' }, 8000);
     if (!res.ok) return;
     const data = await res.json();
     document.querySelectorAll('.news-reactions').forEach(container => {
