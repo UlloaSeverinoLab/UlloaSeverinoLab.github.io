@@ -283,6 +283,8 @@
     .nav-links.open { display: flex !important; }
     .nav-links li { width: 100%; }
     .nav-links a { display: block; padding: 0.9rem 1.5rem; font-size: 0.95rem; letter-spacing: 0.04em; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    /* hide visit counter badge in mobile menu — looks out of place */
+    .nav-links li:last-child { display: none; }
     section { padding: 3.5rem 1.25rem; }
     #home { padding: 6rem 1.25rem 12rem; min-height: auto; }
     .hero-media { grid-template-columns: 1fr; }
@@ -297,6 +299,13 @@
     .research-grid { grid-template-columns: 1fr; }
     .people-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     .resources-grid { grid-template-columns: 1fr; }
+    /* news image: reduce height on mobile */
+    .news-card-img img { height: 140px; }
+    /* reaction bar: stack share button on its own line */
+    .news-reactions { gap: 0.4rem; }
+    .share-btn { margin-left: 0; margin-top: 0.25rem; width: 100%; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 0.4rem; }
+    /* bigger touch targets for reaction buttons */
+    .reaction-btn { padding: 0.4rem 0.85rem; font-size: 0.85rem; }
     footer { padding: 2rem 1.25rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
     footer a { margin-left: 0; margin-right: 1.5rem; }
     footer div:last-child { display: flex; flex-wrap: wrap; }
@@ -970,15 +979,38 @@ function tFetch(url, opts, ms) {
 
 const ORCID      = '0000-0003-3725-9713';
 const OA_MAILTO  = 'mailto=francesco.ulloa@cajal.csic.es';
-const FALLBACK_CIT = 992;  // update manually only if both APIs fail
-const FALLBACK_PUB = 25;   // verified on ORCID profile June 2026
+/* Fallbacks — overwritten immediately by scholar.json on page load */
+let FALLBACK_CIT = 992;
+let FALLBACK_PUB = 25;
 
 const elCit    = document.getElementById('stat-citations');
 const elPub    = document.getElementById('stat-publications');
 const elCitSrc = document.getElementById('stat-cit-source');
 const elPubSrc = document.getElementById('stat-pub-source');
 
-/* ── Publications from ORCID ── */
+/* ── Step 1: load weekly-synced JSON immediately (fast + reliable) ── */
+async function loadScholarJSON() {
+  try {
+    const cacheBust = Math.floor(Date.now() / 3600000); // changes hourly
+    const res = await tFetch(
+      `https://raw.githubusercontent.com/UlloaSeverinoLab/UlloaSeverinoLab.github.io/main/data/scholar.json?t=${cacheBust}`,
+      { cache: 'no-store' }, 6000);
+    if (!res.ok) return;
+    const d = await res.json();
+    if (d.citations > 0) {
+      FALLBACK_CIT = d.citations;
+      elCit.textContent    = d.citations.toLocaleString();
+      elCitSrc.textContent = 'weekly sync';
+    }
+    if (d.publications > 0) {
+      FALLBACK_PUB = d.publications;
+      elPub.textContent    = d.publications;
+      elPubSrc.textContent = 'weekly sync';
+    }
+  } catch { /* silent — live APIs will fill in below */ }
+}
+
+/* ── Step 2: confirm/update with live APIs (more accurate) ── */
 async function fetchPubs() {
   try {
     const res  = await tFetch(`https://pub.orcid.org/v3.0/${ORCID}/works`,
@@ -989,23 +1021,19 @@ async function fetchPubs() {
     if (count > 0) {
       elPub.textContent    = count;
       elPubSrc.textContent = 'ORCID';
-    } else {
-      throw new Error();
-    }
+    } else { throw new Error(); }
   } catch {
     elPub.textContent    = FALLBACK_PUB;
     elPubSrc.textContent = 'last known';
   }
 }
 
-/* ── Citations from OpenAlex (preprint+journal deduplication) ── */
 function normaliseTitle(t) {
   return (t || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
 }
 
 async function fetchCitations() {
   try {
-    /* Resolve OpenAlex author ID via ORCID */
     const aRes  = await tFetch(`https://api.openalex.org/authors?filter=orcid:${ORCID}&${OA_MAILTO}`, {}, 7000);
     if (!aRes.ok) throw new Error();
     const aJson = await aRes.json();
@@ -1013,15 +1041,11 @@ async function fetchCitations() {
     if (!author) throw new Error();
     const authorId = author.id.replace('https://openalex.org/', '');
 
-    /* Fetch all works */
     const wRes  = await tFetch(`https://api.openalex.org/works?filter=authorships.author.id:${authorId}&per-page=200&select=title,cited_by_count,type&${OA_MAILTO}`, {}, 10000);
     if (!wRes.ok) throw new Error();
     const works = (await wRes.json()).results || [];
 
-    /* Keep journal articles and preprints only */
     const relevant = works.filter(w => w.type === 'journal-article' || w.type === 'posted-content');
-
-    /* Group by normalised title, sum citations per group */
     const groups = {};
     for (const w of relevant) {
       const key = normaliseTitle(w.title);
@@ -1029,23 +1053,22 @@ async function fetchCitations() {
       if (!groups[key]) groups[key] = 0;
       groups[key] += (w.cited_by_count || 0);
     }
-
     const total = Object.values(groups).reduce((s, n) => s + n, 0);
     if (total > 0) {
       elCit.textContent    = total.toLocaleString();
       elCitSrc.textContent = 'OpenAlex';
-    } else {
-      throw new Error();
-    }
+    } else { throw new Error(); }
   } catch {
     elCit.textContent    = FALLBACK_CIT.toLocaleString();
     elCitSrc.textContent = 'last known';
   }
 }
 
-/* Run both in parallel */
-fetchPubs();
-fetchCitations();
+/* Load JSON first (instant display), then refine with live APIs */
+loadScholarJSON().then(() => {
+  fetchPubs();
+  fetchCitations();
+});
 
 /* ─── VISITOR COUNTER ────────────────────────────────────────────
    Uses CounterAPI.dev (free, no account needed).
