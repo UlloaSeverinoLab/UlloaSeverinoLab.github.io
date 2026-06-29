@@ -656,6 +656,29 @@
        move the oldest one to the archive list below.               -->
   <div class="news-grid">
 
+    <div class="news-card" id="news-cam-salud-jun26">
+      <div class="news-card-img" onclick="openLightbox('News_picture/CAM_Salud.jpg')">
+        <img src="News_picture/CAM_Salud.jpg" alt="TrascEND(EA)-CM — Comunidad de Madrid I+D en Salud">
+        <span class="news-card-zoom">🔍</span>
+      </div>
+      <div class="news-card-body">
+        <div class="news-card-date">June 2026</div>
+        <span class="news-type award">Award</span>
+        <h4>TrascEND(EA)-CM project awarded!</h4>
+        <p>We are excited to announce that our lab has been awarded a project funded by the Comunidad de Madrid I+D en Salud programme! Together with the group of José María Frade (CNC-CSIC), this collaborative project brings together research groups from ISCIII, CNC, UAH, UCM, and HULP to identify, validate, and translate molecular biomarkers for the early diagnosis of Alzheimer's disease.</p>
+      </div>
+      <div class="news-reactions" data-news-id="cam-salud-jun26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
+      </div>
+    </div>
+
     <div class="news-card" id="news-oyin-welcome-jun26">
       <div class="news-card-img" onclick="openLightbox('News_picture/Oyinkansola Peleyeju.jpg')">
         <img src="News_picture/Oyinkansola Peleyeju.jpg" alt="Oyinkansola Peleyeju">
@@ -791,44 +814,21 @@
       </div>
     </div>
 
-    <div class="news-card" id="news-lab-lunch-may26">
-      <div class="news-card-img" onclick="openLightbox('News_picture/Lablunch_May26.jpg')">
-        <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2026">
-        <span class="news-card-zoom">🔍</span>
-      </div>
-      <div class="news-card-body">
-        <div class="news-card-date">26 May 2026</div>
-        <span class="news-type event">Event</span>
-        <h4>Lab lunch with the Arévalo Lab</h4>
-        <p>Our lab and the Arévalo Lab went out for lunch to say goodbye to Ivan, a visiting student from Argentina who spent 3 months with us. It was a wonderful time together — we wish Ivan all the best in his next adventures!</p>
-      </div>
-      <div class="news-reactions" data-news-id="lab-lunch-may26">
-        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
-        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
-        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
-        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
-          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          Share
-          <span class="share-toast">Link copied!</span>
-        </button>
-      </div>
-    </div>
-
   </div>
 
   <!-- ── FROM 7TH ITEM ONWARD (text only, image on click) ────────────
        Add older items here. Image appears only when title is clicked. -->
   <div class="news-archive">
-    <!-- Example archive item (hidden by default):
-    <div class="news-archive-item">
-      <div class="news-archive-date">Jan 2023 · Announcement</div>
-      <h4 onclick="toggleArchive(this)">Title here <span class="toggle-arrow">▾</span></h4>
+
+    <div class="news-archive-item" id="news-lab-lunch-may26">
+      <div class="news-archive-date">26 May 2026 · Event</div>
+      <h4 onclick="toggleArchive(this)">Lab lunch with the Arévalo Lab <span class="toggle-arrow">▾</span></h4>
       <div class="news-archive-body">
-        <p>Description here.</p>
-        <img src="News_picture/example.jpg" alt="...">
+        <p>Our lab and the Arévalo Lab went out for lunch to say goodbye to Ivan, a visiting student from Argentina who spent 3 months with us. It was a wonderful time together — we wish Ivan all the best in his next adventures!</p>
+        <img src="News_picture/Lablunch_May26.jpg" alt="Lab lunch May 2026">
       </div>
     </div>
-    -->
+
   </div>
 
 </section>
