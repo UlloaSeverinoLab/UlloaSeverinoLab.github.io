@@ -1,10 +1,42 @@
 {
-  "pub-two-papers-jul26":     { "heart": 0, "clap": 0, "thumbsup": 0 },
-  "cam-salud-jun26":          { "heart": 0, "clap": 0, "thumbsup": 0 },
-  "oyin-welcome-jun26":       { "heart": 0, "clap": 0, "thumbsup": 0 },
-  "daniel-habit-jun26":       { "heart": 0, "clap": 0, "thumbsup": 0 },
-  "cagla-visit-jun26":        { "heart": 2, "clap": 3, "thumbsup": 1 },
-  "francesca-welcome-jun26":  { "heart": 4, "clap": 2, "thumbsup": 1 },
-  "marta-astrocafe-jun26":    { "heart": 1, "clap": 3, "thumbsup": 0 },
-  "lab-lunch-may26":          { "heart": 4, "clap": 0, "thumbsup": 1 }
+  "pub-two-papers-jul26": {
+    "heart": 0,
+    "clap": 1,
+    "thumbsup": 1
+  },
+  "cam-salud-jun26": {
+    "heart": 0,
+    "clap": 2,
+    "thumbsup": 2
+  },
+  "oyin-welcome-jun26": {
+    "heart": 3,
+    "clap": 6,
+    "thumbsup": 1
+  },
+  "daniel-habit-jun26": {
+    "heart": 3,
+    "clap": 6,
+    "thumbsup": 4
+  },
+  "cagla-visit-jun26": {
+    "heart": 7,
+    "clap": 5,
+    "thumbsup": 1
+  },
+  "francesca-welcome-jun26": {
+    "heart": 4,
+    "clap": 3,
+    "thumbsup": 2
+  },
+  "marta-astrocafe-jun26": {
+    "heart": 1,
+    "clap": 5,
+    "thumbsup": 0
+  },
+  "lab-lunch-may26": {
+    "heart": 4,
+    "clap": 1,
+    "thumbsup": 1
+  }
 }
