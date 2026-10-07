@@ -197,7 +197,18 @@
   .news-card-date { font-size: 0.75rem; color: var(--teal-mid); font-weight: 500; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
   .news-card h4 { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--navy); margin: 0.35rem 0 0.5rem; line-height: 1.4; }
   .news-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
-  .carousel-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.25rem; }
+  /* Edge arrow buttons (overlaid on carousel) */
+  .news-carousel-track { position: relative; }
+  .carousel-edge-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.95); border: 1px solid var(--border); box-shadow: 0 2px 14px rgba(10,22,40,0.13); color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 1.4rem; line-height: 1; opacity: 0; pointer-events: none; transition: opacity 0.25s, background 0.2s, color 0.2s, border-color 0.2s; padding: 0; }
+  .carousel-edge-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .carousel-edge-btn.show { opacity: 1; pointer-events: auto; }
+  .carousel-edge-btn.prev { left: 8px; }
+  .carousel-edge-btn.next { right: 8px; }
+  /* Bottom nav: arrows + dots */
+  .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 1.25rem; }
+  .carousel-nav-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: #fff; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; transition: border-color 0.2s, background 0.2s, color 0.2s; flex-shrink: 0; padding: 0; }
+  .carousel-nav-btn:hover:not(:disabled) { border-color: var(--teal); background: var(--teal); color: #fff; }
+  .carousel-nav-btn:disabled { opacity: 0.3; cursor: default; }
   .carousel-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--border); cursor: pointer; padding: 0; transition: background 0.2s, transform 0.2s; flex-shrink: 0; }
   .carousel-dot.active { background: var(--teal-mid); transform: scale(1.35); }
 
@@ -638,7 +649,31 @@
   <!-- ── NEWS CAROUSEL ───────────────────────────────────────────────
        Add new items at the TOP. Dots and scroll are handled by JS.  -->
   <div class="news-carousel-wrapper">
+  <div class="news-carousel-track" id="news-carousel-track">
   <div class="news-carousel" id="news-carousel">
+
+    <div class="news-card" id="news-mariana-visit-oct26">
+      <div class="news-card-img" onclick="openLightbox('News_picture/MarianaSottomayor_visit.jpg')">
+        <img src="News_picture/MarianaSottomayor_visit.jpg" alt="Mariana Sottomayor visit">
+        <span class="news-card-zoom">🔍</span>
+      </div>
+      <div class="news-card-body">
+        <div class="news-card-date">October 2026</div>
+        <span class="news-type announcement">Announcement</span>
+        <h4>Welcome, Mariana!</h4>
+        <p>We are delighted to welcome Mariana Sottomayor to our lab for a three-month visit! Mariana holds a Bachelor's degree in Biology and a Master's in Evolutionary and Developmental Biology from the University of Lisbon. She is a PhD student in Sandra Vaz's laboratory at the Faculty of Medicine in Portugal, where her research focuses on the role of astrocytes in absence seizures. During her stay, she will quantify astrocytic morphology and connexin expression in two absence seizure models to determine whether astrocytic changes are seizure-dependent or represent primary, seizure-independent developmental defects.</p>
+      </div>
+      <div class="news-reactions" data-news-id="mariana-visit-oct26">
+        <button class="reaction-btn" data-reaction="heart" onclick="handleReaction(this)"><span class="reaction-emoji">❤️</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="clap" onclick="handleReaction(this)"><span class="reaction-emoji">👏</span> <span class="reaction-count">0</span></button>
+        <button class="reaction-btn" data-reaction="thumbsup" onclick="handleReaction(this)"><span class="reaction-emoji">👍</span> <span class="reaction-count">0</span></button>
+        <button class="share-btn" onclick="shareNews(this)" title="Copy link">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share
+          <span class="share-toast">Link copied!</span>
+        </button>
+      </div>
+    </div>
 
     <div class="news-card" id="news-pub-two-papers-jul26">
       <div class="news-card-img" style="background:linear-gradient(135deg,#0a1628 0%,#0d2a1f 100%);display:flex;align-items:center;justify-content:center;height:180px;cursor:default;flex-direction:column;gap:0.75rem;">
@@ -844,7 +879,8 @@
     </div>
 
   </div><!-- end .news-carousel -->
-  <div class="carousel-dots" id="carousel-dots"></div>
+  </div><!-- end .news-carousel-track -->
+  <div class="carousel-nav" id="carousel-nav"></div>
   </div><!-- end .news-carousel-wrapper -->
 
 </section>
@@ -1157,36 +1193,106 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 
 /* ─── NEWS CAROUSEL ──────────────────────────────────────────── */
 function initNewsCarousel() {
-  const carousel = document.getElementById('news-carousel');
-  const dotsContainer = document.getElementById('carousel-dots');
-  if (!carousel || !dotsContainer) return;
+  const carousel  = document.getElementById('news-carousel');
+  const track     = document.getElementById('news-carousel-track');
+  const navContainer = document.getElementById('carousel-nav');
+  if (!carousel || !track || !navContainer) return;
+
   const cards = Array.from(carousel.querySelectorAll('.news-card'));
   if (!cards.length) return;
 
-  // Build dots — one per card
-  cards.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', 'News item ' + (i + 1));
-    dot.addEventListener('click', () => {
-      cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    });
-    dotsContainer.appendChild(dot);
+  // ── Edge arrow buttons ──────────────────────────────────────
+  function makeEdgeBtn(side, symbol) {
+    const btn = document.createElement('button');
+    btn.className = 'carousel-edge-btn ' + side;
+    btn.innerHTML = symbol;
+    btn.setAttribute('aria-label', side === 'prev' ? 'Previous' : 'Next');
+    track.appendChild(btn);
+    return btn;
+  }
+  const prevEdge = makeEdgeBtn('prev', '&#8249;');
+  const nextEdge = makeEdgeBtn('next', '&#8250;');
+
+  // ── Page helpers ────────────────────────────────────────────
+  function getCardsPerPage() {
+    if (!cards[0] || !cards[0].offsetWidth) return 3;
+    const gap = parseFloat(getComputedStyle(carousel).columnGap) || 24;
+    return Math.max(1, Math.round(carousel.clientWidth / (cards[0].offsetWidth + gap)));
+  }
+  function getTotalPages() {
+    return Math.max(1, Math.ceil(cards.length / getCardsPerPage()));
+  }
+  function getCurrentPage() {
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    if (maxScroll <= 0) return 0;
+    return Math.min(getTotalPages() - 1,
+      Math.round((carousel.scrollLeft / maxScroll) * (getTotalPages() - 1)));
+  }
+  function scrollToPage(page) {
+    const totalPages = getTotalPages();
+    page = Math.max(0, Math.min(totalPages - 1, page));
+    const card = cards[page * getCardsPerPage()];
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }
+
+  // ── Build bottom nav: ← [dots] → ───────────────────────────
+  function buildNav() {
+    navContainer.innerHTML = '';
+    const totalPages = getTotalPages();
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'carousel-nav-btn';
+    prevBtn.innerHTML = '&#8592;';
+    prevBtn.setAttribute('aria-label', 'Previous page');
+    prevBtn.addEventListener('click', () => scrollToPage(getCurrentPage() - 1));
+    navContainer.appendChild(prevBtn);
+
+    for (let i = 0; i < totalPages; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Page ' + (i + 1));
+      dot.addEventListener('click', () => scrollToPage(i));
+      navContainer.appendChild(dot);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'carousel-nav-btn';
+    nextBtn.innerHTML = '&#8594;';
+    nextBtn.setAttribute('aria-label', 'Next page');
+    nextBtn.addEventListener('click', () => scrollToPage(getCurrentPage() + 1));
+    navContainer.appendChild(nextBtn);
+  }
+
+  // ── Update UI (called on scroll + resize) ───────────────────
+  function updateUI() {
+    const page   = getCurrentPage();
+    const atStart = carousel.scrollLeft <= 2;
+    const atEnd   = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 2;
+
+    prevEdge.classList.toggle('show', !atStart);
+    nextEdge.classList.toggle('show', !atEnd);
+
+    navContainer.querySelectorAll('.carousel-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === page));
+
+    const navBtns = navContainer.querySelectorAll('.carousel-nav-btn');
+    if (navBtns[0]) navBtns[0].disabled = atStart;
+    if (navBtns[1]) navBtns[1].disabled = atEnd;
+  }
+
+  prevEdge.addEventListener('click', () => scrollToPage(getCurrentPage() - 1));
+  nextEdge.addEventListener('click', () => scrollToPage(getCurrentPage() + 1));
+
+  buildNav();
+  updateUI();
+
+  carousel.addEventListener('scroll', updateUI, { passive: true });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { buildNav(); updateUI(); }, 150);
   });
-
-  const dots = Array.from(dotsContainer.querySelectorAll('.carousel-dot'));
-
-  // Update active dot as user scrolls
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = cards.indexOf(entry.target);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }
-    });
-  }, { root: carousel, threshold: 0.5 });
-
-  cards.forEach(card => observer.observe(card));
 }
 document.addEventListener('DOMContentLoaded', initNewsCarousel);
 
