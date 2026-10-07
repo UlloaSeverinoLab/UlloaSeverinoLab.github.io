@@ -162,17 +162,28 @@
   .pi-link:hover { background: rgba(93,202,165,0.1); }
 
   /* RESEARCH */
-  #research { background: #fff; }
+  #research {
+    background: url('Image2_UlloaSeverino_CNC.jpg') center/cover no-repeat;
+    position: relative;
+  }
+  #research::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(10, 22, 40, 0.68); z-index: 0;
+  }
+  #research > * { position: relative; z-index: 1; }
+  #research .section-label { color: #5DCAA5; }
+  #research .section-title { color: #fff; }
+  #research .section-intro { color: rgba(255,255,255,0.72); }
   .research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-  .research-card { border: 1px solid var(--border); border-radius: 8px; padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.2s; }
-  .research-card:hover { border-color: var(--teal); }
+  .research-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .research-card:hover { border-color: rgba(93,202,165,0.5); background: rgba(255,255,255,0.11); }
   .research-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
   .research-card:hover::before { transform: scaleX(1); }
-  .research-icon { width: 48px; height: 48px; background: var(--teal-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
-  .research-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--navy); margin-bottom: 0.75rem; }
-  .research-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+  .research-icon { width: 48px; height: 48px; background: rgba(29,158,117,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
+  .research-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; margin-bottom: 0.75rem; }
+  .research-card p { font-size: 0.9rem; color: rgba(255,255,255,0.64); line-height: 1.7; }
   .research-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
-  .tag { background: var(--teal-light); color: var(--teal-mid); font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 2rem; font-weight: 500; letter-spacing: 0.04em; }
+  .tag { background: rgba(29,158,117,0.2); color: #5DCAA5; font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 2rem; font-weight: 500; letter-spacing: 0.04em; }
 
   /* NEWS */
   #news { background: var(--warm); }
