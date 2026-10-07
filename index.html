@@ -249,12 +249,33 @@
   /* RESOURCES */
   #resources { background: #fff; }
   .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
-  .resource-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; text-decoration: none; color: inherit; display: block; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+  .resource-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; text-decoration: none; color: inherit; display: block; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; cursor: pointer; }
   .resource-card:hover { transform: translateY(-3px); border-color: var(--teal); box-shadow: 0 8px 24px rgba(10,22,40,0.07); }
   .resource-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
   .resource-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.5rem; }
   .resource-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
   .resource-link { font-size: 0.8rem; color: var(--teal-mid); font-weight: 500; letter-spacing: 0.04em; }
+  .resource-link.muted { color: var(--text-muted); font-style: italic; }
+  /* Resource modals */
+  .res-modal-overlay { position: fixed; inset: 0; background: rgba(10,22,40,0.55); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .res-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .res-modal { background: #fff; border-radius: 12px; padding: 2rem; max-width: 560px; width: 100%; box-shadow: 0 20px 60px rgba(10,22,40,0.18); position: relative; }
+  .res-modal h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 1.25rem; }
+  .res-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0.25rem; }
+  .res-modal-close:hover { color: var(--navy); }
+  .dataset-entry { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .dataset-entry p { font-size: 0.875rem; color: var(--text); line-height: 1.7; margin-bottom: 0.75rem; }
+  .dataset-entry p em { font-style: italic; }
+  .dataset-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--teal); color: #fff; text-decoration: none; font-size: 0.8rem; font-weight: 500; padding: 0.45rem 1rem; border-radius: 2rem; transition: background 0.2s; }
+  .dataset-btn:hover { background: var(--teal-mid); }
+  /* Handbook login */
+  .handbook-form { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+  .handbook-form input { border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.85rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; color: var(--navy); outline: none; transition: border-color 0.2s; }
+  .handbook-form input:focus { border-color: var(--teal); }
+  .handbook-form button { background: var(--teal); color: #fff; border: none; border-radius: 6px; padding: 0.65rem; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .handbook-form button:hover { background: var(--teal-mid); }
+  .handbook-error { font-size: 0.82rem; color: #c0392b; display: none; margin-top: -0.25rem; }
+  .handbook-error.show { display: block; }
 
   /* FOOTER */
   footer { background: var(--navy); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
@@ -984,44 +1005,61 @@
   <h2 class="section-title">Resources</h2>
   <p class="section-intro">We are committed to open science. Below you'll find protocols, datasets, code, and other materials from our work.</p>
   <div class="resources-grid">
-    <a href="#" class="resource-card">
+    <div class="resource-card" style="cursor:default;">
       <span class="resource-icon">📄</span>
       <h3>Protocols</h3>
       <p>Step-by-step experimental protocols for in vivo imaging, slice electrophysiology, viral injections, and behavioral paradigms.</p>
-      <span class="resource-link">Browse protocols →</span>
-    </a>
-    <a href="#" class="resource-card">
+      <span class="resource-link muted">Coming soon</span>
+    </div>
+    <div class="resource-card" onclick="document.getElementById('modal-datasets').classList.add('open')">
       <span class="resource-icon">💾</span>
       <h3>Datasets</h3>
-      <p>Open-access neural and behavioral datasets from our published work, hosted on Zenodo and the DANDI Archive.</p>
+      <p>Open-access neural and behavioral datasets from our published work.</p>
       <span class="resource-link">Access data →</span>
-    </a>
+    </div>
     <a href="https://github.com/UlloaSeverinoLab" target="_blank" rel="noopener" class="resource-card">
       <span class="resource-icon">⚙️</span>
       <h3>Analysis Code</h3>
       <p>GitHub repositories with Python and MATLAB code for calcium imaging analysis, behavioral scoring, and circuit modeling.</p>
       <span class="resource-link">View on GitHub →</span>
     </a>
-    <a href="#" class="resource-card">
+    <div class="resource-card" onclick="document.getElementById('modal-handbook').classList.add('open');document.getElementById('hb-password').focus()">
       <span class="resource-icon">🖊️</span>
       <h3>Lab Handbook</h3>
       <p>Our internal guide covering lab culture, expectations, safety procedures, and onboarding for new members.</p>
       <span class="resource-link">Read the handbook →</span>
-    </a>
-    <a href="#" class="resource-card">
-      <span class="resource-icon">📚</span>
-      <h3>Reading List</h3>
-      <p>A curated selection of foundational and cutting-edge papers relevant to astrocyte biology, circuits, and behavior.</p>
-      <span class="resource-link">View reading list →</span>
-    </a>
-    <a href="mailto:francesco.ulloa@cajal.csic.es" class="resource-card">
-      <span class="resource-icon">🎓</span>
-      <h3>For Prospective Members</h3>
-      <p>Information for students and postdocs interested in joining. We welcome motivated researchers at all career stages.</p>
-      <span class="resource-link">Get in touch →</span>
-    </a>
+    </div>
   </div>
 </section>
+
+<!-- DATASETS MODAL -->
+<div class="res-modal-overlay" id="modal-datasets" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="res-modal">
+    <button class="res-modal-close" onclick="document.getElementById('modal-datasets').classList.remove('open')">✕</button>
+    <h3>💾 Datasets</h3>
+    <div class="dataset-entry">
+      <p>Ulloa Severino FP*, Lawal O*, Sakers K, Wang S, Kim N, Friedman A, Johnson SA, Sriworarat C, Hughes RN, Soderling SH, Kim IH, Yin HH*, Eroglu C*. Training-induced circuit-specific excitatory synaptogenesis in mice is required for effort control. <em>Nature Communications</em>, 14(1):5522, 2023. DOI: 10.1038/s41467-023-41078-z</p>
+      <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE169392" target="_blank" rel="noopener" class="dataset-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Bulk RNA-seq data · GEO GSE169392
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- LAB HANDBOOK MODAL -->
+<div class="res-modal-overlay" id="modal-handbook" onclick="if(event.target===this){this.classList.remove('open');document.getElementById('hb-error').classList.remove('show');}">
+  <div class="res-modal">
+    <button class="res-modal-close" onclick="document.getElementById('modal-handbook').classList.remove('open');document.getElementById('hb-error').classList.remove('show')">✕</button>
+    <h3>🖊️ Lab Handbook</h3>
+    <p style="font-size:0.87rem;color:var(--text-muted);margin-bottom:1.25rem;">This resource is for lab members only. Please enter the lab password to continue.</p>
+    <div class="handbook-form">
+      <input type="password" id="hb-password" placeholder="Password" onkeydown="if(event.key==='Enter')checkHandbookPassword()">
+      <span class="handbook-error" id="hb-error">Incorrect password. Please try again.</span>
+      <button onclick="checkHandbookPassword()">Access Handbook</button>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -1190,6 +1228,24 @@ async function updateVisitCounter() {
 
 /* Always fire — no personal data collected */
 updateVisitCounter();
+
+/* ─── HANDBOOK LOGIN ─────────────────────────────────────────── */
+function checkHandbookPassword() {
+  const pw = document.getElementById('hb-password').value;
+  const err = document.getElementById('hb-error');
+  // Change this password by editing the string below
+  if (pw === 'ulloaseverinolab') {
+    document.getElementById('modal-handbook').classList.remove('open');
+    document.getElementById('hb-password').value = '';
+    err.classList.remove('show');
+    // TODO: replace this alert with a link to the actual handbook URL
+    alert('Welcome! The handbook will be linked here once the document is ready.');
+  } else {
+    err.classList.add('show');
+    document.getElementById('hb-password').value = '';
+    document.getElementById('hb-password').focus();
+  }
+}
 
 /* ─── LIGHTBOX ───────────────────────────────────────────────── */
 function openLightbox(src) {
