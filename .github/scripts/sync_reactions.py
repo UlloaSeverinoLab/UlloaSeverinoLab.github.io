@@ -2,6 +2,7 @@ import urllib.request, json, time, os
 
 NS = 'ulloaseverinolab'
 NEWS_IDS = [
+    'francescas-farewell-oct26',
     'mariana-visit-oct26',
     'pub-two-papers-jul26',
     'cam-salud-jun26',
